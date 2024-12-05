@@ -33,6 +33,13 @@ public class Tuple {
         return true;
     }
 
+    public static float[] cross(float[] a, float[] b) {
+        return vector(
+                a[1] * b[2] - a[2] * b[1],
+                a[2] * b[0] - a[0] * b[2],
+                a[0] * b[1] - a[1] * b[0]);
+    }
+
     public static float[] divide(float[] tuple, float scalar) {
         float[] result = new float[4];
 

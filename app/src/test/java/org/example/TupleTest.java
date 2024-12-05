@@ -168,4 +168,16 @@ class TupleTest {
         var actual = Tuple.dot(vectorA, vectorB);
         assertTrue(Scalar.areEqual(expected, actual));
     }
+
+    @Test
+    void test_crossProduct() {
+        var vectorA = Tuple.vector(1, 2, 3);
+        var vectorB = Tuple.vector(2, 3, 4);
+        var expectedA = Tuple.vector(-1, 2, -1);
+        var expectedB = Tuple.vector(1, -2, 1);
+        var actualA = Tuple.cross(vectorA, vectorB);
+        var actualB = Tuple.cross(vectorB, vectorA);
+        assertTrue(Tuple.areEqual(expectedA, actualA));
+        assertTrue(Tuple.areEqual(expectedB, actualB));
+    }
 }
