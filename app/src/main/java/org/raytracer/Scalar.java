@@ -1,4 +1,4 @@
-package org.example;
+package org.raytracer;
 
 public class Scalar {
     public static float EPSILON = 0.00001f;

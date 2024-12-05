@@ -1,4 +1,4 @@
-package org.example;
+package org.raytracer;
 
 public class Tuple {
 
@@ -94,6 +94,11 @@ public class Tuple {
 
     public static float[] point(float... tuple) {
         return appendFloat(tuple, POINT_IDENTIFIER);
+    }
+
+    public static String pretty(float[] tuple) {
+        String output = "(%f, %f, %f, %f)";
+        return String.format(output, tuple[0], tuple[1], tuple[2], tuple[3]);
     }
 
     public static float[] scale(float[] tuple, float scalar) {
