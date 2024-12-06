@@ -17,4 +17,24 @@ public class Vector extends Tuple {
                 a[2] * b[0] - a[0] * b[2],
                 a[0] * b[1] - a[1] * b[0]);
     }
+
+    public static boolean isNormalized(float[] tuple) {
+        float magnitude = magnitude(tuple);
+        return Math.abs(1f - magnitude) <= Constants.EPSILON;
+    }
+
+    public static float magnitude(float[] vector) {
+        float sumOfSquares = 0f;
+
+        for (int i = 0; i < vector.length; i++) {
+            sumOfSquares += Math.pow(vector[i], 2);
+        }
+
+        return (float) Math.sqrt(sumOfSquares);
+    }
+
+    public static float[] normalize(float[] tuple) {
+        float magnitude = magnitude(tuple);
+        return divide(tuple, magnitude);
+    }
 }

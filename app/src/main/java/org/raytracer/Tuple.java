@@ -49,28 +49,8 @@ public class Tuple {
         return product;
     }
 
-    public static boolean isNormalized(float[] tuple) {
-        float magnitude = magnitude(tuple);
-        return Math.abs(1f - magnitude) <= Constants.EPSILON;
-    }
-
-    public static float magnitude(float[] tuple) {
-        float sumOfSquares = 0f;
-
-        for (int i = 0; i < tuple.length; i++) {
-            sumOfSquares += Math.pow(tuple[i], 2);
-        }
-
-        return (float) Math.sqrt(sumOfSquares);
-    }
-
     public static float[] negate(float[] tuple) {
         return scale(tuple, -1f);
-    }
-
-    public static float[] normalize(float[] tuple) {
-        float magnitude = magnitude(tuple);
-        return divide(tuple, magnitude);
     }
 
     public static String pretty(float[] tuple) {
