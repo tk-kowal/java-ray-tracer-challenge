@@ -5,12 +5,12 @@ import java.util.Iterator;
 public class Canvas implements Iterable<float[]> {
 
     private int width, height;
-    private float[][] pixels;
+    private float[][][] pixels;
 
     public Canvas(int width, int height) {
         this.width = width;
         this.height = height;
-        this.pixels = new float[width * height][3];
+        this.pixels = new float[height][width][3];
     }
 
     public int width() {
@@ -22,20 +22,15 @@ public class Canvas implements Iterable<float[]> {
     }
 
     public void writePixel(int x, int y, float[] color) {
-        var index = coordsToIndex(x, y);
-        if (index < 0 || index > pixels.length) {
+        if (x < 0 || y < 0 || x >= width || y >= height) {
             System.out.println(String.format("%d, %d is outside of the canvas.", x, y));
             return;
         }
-        pixels[coordsToIndex(x, y)] = color;
+        pixels[y][x] = color;
     }
 
     public float[] pixelAt(int x, int y) {
-        return pixels[coordsToIndex(x, y)];
-    }
-
-    private int coordsToIndex(int x, int y) {
-        return x + width * y;
+        return pixels[y][x];
     }
 
     @Override
@@ -44,19 +39,27 @@ public class Canvas implements Iterable<float[]> {
     }
 
     private class CanvasIterator implements Iterator<float[]> {
-        private int currentIndex = 0;
+        private int currentX = 0;
+        private int currentY = 0;
+        private int index = 0;
+        private int maxIndex = width * height;
 
         @Override
         public boolean hasNext() {
-            return currentIndex < pixels.length;
+            return index < maxIndex;
         }
 
         @Override
         public float[] next() {
+            if (currentX == width) {
+                currentX = 0;
+                currentY++;
+            }
             if (!hasNext()) {
                 throw new java.util.NoSuchElementException();
             }
-            return pixels[currentIndex++];
+            index++;
+            return pixels[currentY][currentX++];
         }
     }
 }

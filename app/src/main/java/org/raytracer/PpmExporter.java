@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class PpmExporter {
+    private static String MAGIC_VALUE = "P3";
     private static int MAX_VALUE = 255;
 
     public static String toString(Canvas c) {
@@ -21,7 +22,12 @@ public class PpmExporter {
     }
 
     private static String header(int width, int height) {
-        return String.format("P3\n%d %d\n%d\n", width, height, MAX_VALUE);
+        return MAGIC_VALUE
+                + System.lineSeparator()
+                + String.valueOf(width) + " " + String.valueOf(height)
+                + System.lineSeparator()
+                + String.valueOf(MAX_VALUE)
+                + System.lineSeparator();
     }
 
     private static String pixels(Canvas c) {
@@ -30,17 +36,18 @@ public class PpmExporter {
 
         for (float[] pixel : c) {
             for (float component : pixel) {
-                var pixelString = String.format("%d ", (int) Math.clamp(component * MAX_VALUE, 0, MAX_VALUE));
-                lineLength += pixelString.length();
-                pixelData += pixelString;
+                var componentStr = lineLength == 0 ? "" : " ";
+                componentStr += String.valueOf((int) Math.clamp(component * MAX_VALUE, 0, MAX_VALUE));
+                lineLength += componentStr.length();
+                pixelData += componentStr;
             }
-            if (lineLength > 70) {
-                pixelData += "\n";
+            if (lineLength > 55) {
+                pixelData += System.lineSeparator();
                 lineLength = 0;
             }
         }
 
-        return pixelData + "\n";
+        return pixelData + System.lineSeparator();
     }
 
 }
