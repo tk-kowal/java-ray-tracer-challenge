@@ -29,8 +29,8 @@ public class ProjectileRenderTest {
 
     @Test
     public void test_Tick() {
-        var canvas = new Canvas(990, 550);
-        var projectile = new Projectile(point(0, 1, 0), multiply(normalize(vector(1, 1.8f, 0)), 11.25f));
+        var canvas = new Canvas(900, 550);
+        var projectile = new Projectile(point(0, 1, 0), multiply(normalize(vector(1, 1.8f, 0)), 15.25f));
         var environment = new Environment(vector(0, -0.1f, 0), vector(-0.01f, 0, 0));
         var red = Color.color(1, 1, 1);
 

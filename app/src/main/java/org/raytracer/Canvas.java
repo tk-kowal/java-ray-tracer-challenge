@@ -21,6 +21,10 @@ public class Canvas implements Iterable<float[]> {
         return this.height;
     }
 
+    public float[][][] pixels() {
+        return this.pixels;
+    }
+
     public void writePixel(int x, int y, float[] color) {
         if (x < 0 || y < 0 || x >= width || y >= height) {
             System.out.println(String.format("%d, %d is outside of the canvas.", x, y));
