@@ -19,7 +19,7 @@ public class PointTest {
     @Test
     void test_addingVectorToPoint() {
         var point = Point.point(3, -2, 5);
-        var vector = Vector.vector(-2, 3, 1, 0);
+        var vector = Vector.vector(-2, 3, 1);
         var expected = Point.point(1, 1, 6);
         var actual = Tuple.add(point, vector);
         assertTrue(Point.isPoint(actual));

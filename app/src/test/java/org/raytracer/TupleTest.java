@@ -37,7 +37,7 @@ class TupleTest {
         var vector = Vector.vector(1, -2, 3);
         var scalar = 3.5f;
         var expected = Vector.vector(3.5f, -7f, 10.5f);
-        var actual = Tuple.scale(vector, scalar);
+        var actual = Tuple.multiply(vector, scalar);
         assertTrue(Tuple.areEqual(expected, actual));
     }
 
@@ -46,7 +46,7 @@ class TupleTest {
         var vector = Vector.vector(1, -2, 3);
         var scalar = 0.5f;
         var expected = Vector.vector(0.5f, -1f, 1.5f);
-        var actual = Tuple.scale(vector, scalar);
+        var actual = Tuple.multiply(vector, scalar);
         assertTrue(Tuple.areEqual(expected, actual));
     }
 

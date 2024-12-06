@@ -7,7 +7,7 @@ public class Tuple {
             throw new IllegalArgumentException("Tuples must be of equal length.");
         }
 
-        float[] result = new float[4];
+        float[] result = new float[a.length];
 
         for (int i = 0; i < a.length; i++) {
             result[i] = a[i] + b[i];
@@ -30,7 +30,7 @@ public class Tuple {
     }
 
     public static float[] divide(float[] tuple, float scalar) {
-        float[] result = new float[4];
+        float[] result = new float[tuple.length];
 
         for (int i = 0; i < tuple.length; i++) {
             result[i] = tuple[i] / scalar;
@@ -50,7 +50,7 @@ public class Tuple {
     }
 
     public static float[] negate(float[] tuple) {
-        return scale(tuple, -1f);
+        return multiply(tuple, -1f);
     }
 
     public static String pretty(float[] tuple) {
@@ -58,8 +58,8 @@ public class Tuple {
         return String.format(output, tuple[0], tuple[1], tuple[2], tuple[3]);
     }
 
-    public static float[] scale(float[] tuple, float scalar) {
-        float[] result = new float[4];
+    public static float[] multiply(float[] tuple, float scalar) {
+        float[] result = new float[tuple.length];
 
         for (int i = 0; i < tuple.length; i++) {
             result[i] = tuple[i] * scalar;
@@ -73,7 +73,7 @@ public class Tuple {
             throw new IllegalArgumentException("Tuples must be of equal length.");
         }
 
-        float[] result = new float[4];
+        float[] result = new float[a.length];
 
         for (int i = 0; i < a.length; i++) {
             result[i] = a[i] - b[i];
@@ -85,9 +85,9 @@ public class Tuple {
     // PRIVATE
 
     protected static float[] appendFloat(float[] tuple, float value) {
-        float[] result = new float[4];
-        System.arraycopy(tuple, 0, result, 0, 3);
-        result[3] = value;
+        float[] result = new float[tuple.length + 1];
+        System.arraycopy(tuple, 0, result, 0, tuple.length);
+        result[tuple.length] = value;
         return result;
     }
 
