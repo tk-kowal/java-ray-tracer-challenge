@@ -14,6 +14,7 @@ public class PpmExporter {
     private static String MAGIC_VALUE = "P3";
     private static int MAX_VALUE = 255;
     private static int THREAD_COUNT = 10;
+    private static int LINE_LENGTH_LIMIT = 55;
 
     public static String toString(Canvas c) {
         return header(c.width(), c.height()) + pixels(c);
@@ -49,17 +50,16 @@ public class PpmExporter {
                     .println("Starting thread for lines: " + String.valueOf(start) + " through " + String.valueOf(end));
             results.add(es.submit(() -> {
                 var iterator = new CanvasRangeIterator(c, start, end);
-                String pixelData = "";
+                var pixelData = "";
                 int lineLength = 0;
                 while (iterator.hasNext()) {
                     var pixel = iterator.next();
                     for (float component : pixel) {
-                        var componentStr = lineLength == 0 ? "" : " ";
-                        componentStr += String.valueOf((int) Math.clamp(component * MAX_VALUE, 0, MAX_VALUE));
+                        var componentStr = String.valueOf((int) Math.clamp(component * MAX_VALUE, 0, MAX_VALUE)) + " ";
                         lineLength += componentStr.length();
                         pixelData += componentStr;
                     }
-                    if (lineLength > 55) {
+                    if (lineLength > LINE_LENGTH_LIMIT) {
                         pixelData += System.lineSeparator();
                         lineLength = 0;
                     }

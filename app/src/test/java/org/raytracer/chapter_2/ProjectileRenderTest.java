@@ -30,13 +30,12 @@ public class ProjectileRenderTest {
     @Test
     public void test_Tick() {
         var canvas = new Canvas(900, 550);
-        var projectile = new Projectile(point(0, 1, 0), multiply(normalize(vector(1, 1.8f, 0)), 15.25f));
+        var projectile = new Projectile(point(0, 1, 0), multiply(normalize(vector(1, 1.8f, 0)), 8.25f));
         var environment = new Environment(vector(0, -0.1f, 0), vector(-0.01f, 0, 0));
-        var red = Color.color(1, 1, 1);
+        var red = Color.color(1, 0, 0);
 
         do {
             var coords = toCoords(projectile.position, canvas);
-            System.out.println(String.format("Marking %d, %d position on canvas.", coords[0], coords[1]));
             canvas.writePixel(coords[0], coords[1], red);
 
             var newPosition = add(projectile.position, projectile.velocity);
