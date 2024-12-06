@@ -37,14 +37,14 @@ class TupleTest {
     @Test
     void test_areEqual() {
         float[] a = { 1.0f };
-        float[] b = { 1.0f + Tuple.EPSILON / 2 };
+        float[] b = { 1.0f + Constants.EPSILON / 2 };
         assertTrue(Tuple.areEqual(a, b));
     }
 
     @Test
     void test_areNotEqual() {
         float[] a = { 1.0f };
-        float[] b = { 1.0f + Tuple.EPSILON + Tuple.EPSILON / 2 };
+        float[] b = { 1.0f + Constants.EPSILON + Constants.EPSILON / 2 };
         assertFalse(Tuple.areEqual(a, b));
     }
 

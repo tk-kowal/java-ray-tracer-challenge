@@ -4,7 +4,6 @@ public class Tuple {
 
     public static float POINT_IDENTIFIER = 1;
     public static float VECTOR_IDENTIFIER = 0;
-    public static float EPSILON = 0.00001f;
 
     public static float[] add(float[] a, float[] b) {
         if (a.length != b.length) {
@@ -26,7 +25,7 @@ public class Tuple {
         }
 
         for (int i = 0; i < a.length; i++) {
-            if (Math.abs(a[i] - b[i]) > EPSILON)
+            if (Math.abs(a[i] - b[i]) > Constants.EPSILON)
                 return false;
         }
 
@@ -66,7 +65,7 @@ public class Tuple {
 
     public static boolean isNormalized(float[] tuple) {
         float magnitude = magnitude(tuple);
-        return Math.abs(1f - magnitude) <= EPSILON;
+        return Math.abs(1f - magnitude) <= Constants.EPSILON;
     }
 
     public static boolean isVector(float[] tuple) {
