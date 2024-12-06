@@ -13,7 +13,7 @@ class TupleTest {
     @Test
     void test_pointWhenLastElementIsOne() {
         float[] point = { 0, 0, 0, 1 };
-        assertTrue(Tuple.isPoint(point));
+        assertTrue(Point.isPoint(point));
         assertFalse(Vector.isVector(point));
     }
 
@@ -21,12 +21,12 @@ class TupleTest {
     void test_vectorWhenLastElementIsZero() {
         float[] point = { 0, 0, 0, 0 };
         assertTrue(Vector.isVector(point));
-        assertFalse(Tuple.isPoint(point));
+        assertFalse(Point.isPoint(point));
     }
 
     @Test
     void test_createPoint() {
-        assertTrue(Tuple.isPoint(Tuple.point(1, 2, 3)));
+        assertTrue(Point.isPoint(Point.point(1, 2, 3)));
     }
 
     @Test
@@ -50,18 +50,18 @@ class TupleTest {
 
     @Test
     void test_addingVectorToPoint() {
-        var point = Tuple.point(3, -2, 5);
+        var point = Point.point(3, -2, 5);
         var vector = Vector.vector(-2, 3, 1, 0);
-        var expected = Tuple.point(1, 1, 6);
+        var expected = Point.point(1, 1, 6);
         var actual = Tuple.add(point, vector);
-        assertTrue(Tuple.isPoint(actual));
+        assertTrue(Point.isPoint(actual));
         assertTrue(Tuple.areEqual(expected, actual));
     }
 
     @Test
     void test_subtractingTwoPoints() {
-        var pointA = Tuple.point(3, 2, 1);
-        var pointB = Tuple.point(5, 6, 7);
+        var pointA = Point.point(3, 2, 1);
+        var pointB = Point.point(5, 6, 7);
         var expected = Vector.vector(-2, -4, -6);
         var actual = Tuple.subtract(pointA, pointB);
         assertTrue(Vector.isVector(actual));
@@ -70,11 +70,11 @@ class TupleTest {
 
     @Test
     void test_subtractingVectorFromPoint() {
-        var point = Tuple.point(3, 2, 1);
+        var point = Point.point(3, 2, 1);
         var vector = Vector.vector(5, 6, 7);
-        var expected = Tuple.point(-2, -4, -6);
+        var expected = Point.point(-2, -4, -6);
         var actual = Tuple.subtract(point, vector);
-        assertTrue(Tuple.isPoint(actual));
+        assertTrue(Point.isPoint(actual));
         assertTrue(Tuple.areEqual(expected, actual));
     }
 

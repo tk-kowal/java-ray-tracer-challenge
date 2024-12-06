@@ -2,8 +2,6 @@ package org.raytracer;
 
 public class Tuple {
 
-    public static float POINT_IDENTIFIER = 1;
-
     public static float[] add(float[] a, float[] b) {
         if (a.length != b.length) {
             throw new IllegalArgumentException("Tuples must be of equal length.");
@@ -51,10 +49,6 @@ public class Tuple {
         return product;
     }
 
-    public static boolean isPoint(float[] tuple) {
-        return tuple[3] == POINT_IDENTIFIER;
-    }
-
     public static boolean isNormalized(float[] tuple) {
         float magnitude = magnitude(tuple);
         return Math.abs(1f - magnitude) <= Constants.EPSILON;
@@ -77,10 +71,6 @@ public class Tuple {
     public static float[] normalize(float[] tuple) {
         float magnitude = magnitude(tuple);
         return divide(tuple, magnitude);
-    }
-
-    public static float[] point(float... tuple) {
-        return appendFloat(tuple, POINT_IDENTIFIER);
     }
 
     public static String pretty(float[] tuple) {
