@@ -3,7 +3,6 @@ package org.raytracer;
 public class Tuple {
 
     public static float POINT_IDENTIFIER = 1;
-    public static float VECTOR_IDENTIFIER = 0;
 
     public static float[] add(float[] a, float[] b) {
         if (a.length != b.length) {
@@ -30,13 +29,6 @@ public class Tuple {
         }
 
         return true;
-    }
-
-    public static float[] cross(float[] a, float[] b) {
-        return vector(
-                a[1] * b[2] - a[2] * b[1],
-                a[2] * b[0] - a[0] * b[2],
-                a[0] * b[1] - a[1] * b[0]);
     }
 
     public static float[] divide(float[] tuple, float scalar) {
@@ -66,10 +58,6 @@ public class Tuple {
     public static boolean isNormalized(float[] tuple) {
         float magnitude = magnitude(tuple);
         return Math.abs(1f - magnitude) <= Constants.EPSILON;
-    }
-
-    public static boolean isVector(float[] tuple) {
-        return tuple[3] == VECTOR_IDENTIFIER;
     }
 
     public static float magnitude(float[] tuple) {
@@ -124,13 +112,9 @@ public class Tuple {
         return result;
     }
 
-    public static float[] vector(float... tuple) {
-        return appendFloat(tuple, VECTOR_IDENTIFIER);
-    }
-
     // PRIVATE
 
-    private static float[] appendFloat(float[] tuple, float value) {
+    protected static float[] appendFloat(float[] tuple, float value) {
         float[] result = new float[4];
         System.arraycopy(tuple, 0, result, 0, 3);
         result[3] = value;

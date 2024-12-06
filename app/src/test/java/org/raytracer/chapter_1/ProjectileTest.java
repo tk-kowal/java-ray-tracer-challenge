@@ -2,7 +2,7 @@ package org.raytracer.chapter_1;
 
 import org.junit.jupiter.api.Test;
 import static org.raytracer.Tuple.*;
-import static org.raytracer.Scalar.*;
+import static org.raytracer.Vector.vector;
 
 public class ProjectileTest {
     private record Projectile(float[] position, float[] velocity) {
