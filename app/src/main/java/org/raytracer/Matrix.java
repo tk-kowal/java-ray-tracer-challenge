@@ -25,7 +25,8 @@ public class Matrix {
 
     public float cofactor(int row, int col) {
         var minor = minor(row, col);
-        return row + col % 2 == 1 ? minor * -1 : minor;
+        // var flipSign = (row + col) % 2 != 0;
+        return ((row + col) % 2 != 0) ? minor * -1 : minor;
     }
 
     public float determinant() {
@@ -64,6 +65,24 @@ public class Matrix {
 
     public float[] getRow(int row) {
         return values[row];
+    }
+
+    public Matrix inverse() {
+        var determinant = determinant();
+        var result = new Matrix(height, width);
+
+        for (var row = 0; row < height; row++) {
+            for (var col = 0; col < width; col++) {
+                var cofactor = cofactor(row, col);
+                result.set(col, row, cofactor / determinant);
+            }
+        }
+
+        return result;
+    }
+
+    public boolean isInvertible() {
+        return determinant() != 0;
     }
 
     public float minor(int row, int col) {
@@ -129,6 +148,20 @@ public class Matrix {
         }
 
         return result;
+    }
+
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+
+        for (var row : values) {
+            for (var col : row) {
+                str.append(String.valueOf(col));
+                str.append(", ");
+            }
+            str.append(System.lineSeparator());
+        }
+
+        return str.toString();
     }
 
 }
