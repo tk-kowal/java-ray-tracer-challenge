@@ -23,6 +23,10 @@ public class Matrix {
         return matrix;
     }
 
+    public float determinant() {
+        return values[0][0] * values[1][1] - values[0][1] * values[1][0];
+    }
+
     public boolean equals(Matrix other) {
         for (var i = 0; i < values.length; i++) {
             if (Tuple.notEqual(values[i], other.getRow(i)))
@@ -61,6 +65,29 @@ public class Matrix {
 
     public void set(int row, int index, float value) {
         values[row][index] = value;
+    }
+
+    public Matrix submatrix(int rowToRemove, int colToRemove) {
+        var submatrix = new Matrix(height - 1, width - 1);
+        var submatrixRow = 0;
+        var submatrixCol = 0;
+
+        for (int row = 0; row < height; row++) {
+            if (row == rowToRemove)
+                continue;
+            for (int col = 0; col < width; col++) {
+                if (col == colToRemove)
+                    continue;
+                if (submatrixCol >= submatrix.width) {
+                    submatrixRow++;
+                    submatrixCol = 0;
+                }
+                submatrix.set(submatrixRow, submatrixCol, values[row][col]);
+                submatrixCol++;
+            }
+        }
+
+        return submatrix;
     }
 
     public Matrix transpose() {

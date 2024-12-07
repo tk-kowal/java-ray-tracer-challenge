@@ -158,4 +158,50 @@ public class MatrixTest {
     public void test_transposeIdentity() {
         assertTrue(Matrix.IDENTITY_MATRIX.equals(Matrix.IDENTITY_MATRIX.transpose()));
     }
+
+    @Test
+    public void test_determinant2x2() {
+        var matrix = Matrix.matrix(
+                new float[] { 1, 5 },
+                new float[] { -3, 2 });
+        assertEquals(17, matrix.determinant());
+    }
+
+    @Test
+    public void test_submatrix3x3() {
+        var rowToRemove = 0;
+        var colToRemove = 2;
+        var matrix = Matrix.matrix(
+                new float[] { 1, 5, 0 },
+                new float[] { -3, 2, 7 },
+                new float[] { 0, 6, -3 });
+
+        var expected = Matrix.matrix(
+                new float[] { -3, 2 },
+                new float[] { 0, 6 });
+
+        var actual = matrix.submatrix(rowToRemove, colToRemove);
+
+        assertTrue(expected.equals(actual));
+    }
+
+    @Test
+    public void test_submatrix4x4() {
+        var rowToRemove = 2;
+        var colToRemove = 1;
+        var matrix = Matrix.matrix(
+                new float[] { -6, 1, 1, 6 },
+                new float[] { -8, 5, 8, 6 },
+                new float[] { -1, 0, 8, 2 },
+                new float[] { -7, 1, -1, 1 });
+
+        var expected = Matrix.matrix(
+                new float[] { -6, 1, 6 },
+                new float[] { -8, 8, 6 },
+                new float[] { -7, -1, 1 });
+
+        var actual = matrix.submatrix(rowToRemove, colToRemove);
+
+        assertTrue(expected.equals(actual));
+    }
 }
