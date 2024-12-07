@@ -53,6 +53,10 @@ public class Tuple {
         return multiply(tuple, -1f);
     }
 
+    public static boolean notEqual(float[] a, float[] b) {
+        return !areEqual(a, b);
+    }
+
     public static String pretty(float[] tuple) {
         String output = "(%f, %f, %f, %f)";
         return String.format(output, tuple[0], tuple[1], tuple[2], tuple[3]);
