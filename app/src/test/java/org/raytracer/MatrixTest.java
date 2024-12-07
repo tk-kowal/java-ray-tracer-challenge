@@ -94,4 +94,68 @@ public class MatrixTest {
 
         assertTrue(expected.equals(actual));
     }
+
+    @Test
+    public void test_multiplyTuple() {
+        var matrix = Matrix.matrix(
+                new float[] { 1, 2, 3, 4 },
+                new float[] { 2, 4, 4, 2 },
+                new float[] { 8, 6, 4, 1 },
+                new float[] { 0, 0, 0, 1 });
+        var tuple = new float[] { 1, 2, 3, 1 };
+        var expected = new float[] { 18, 24, 33, 1 };
+        var actual = matrix.tupleMultiply(tuple);
+
+        assertTrue(Tuple.areEqual(expected, actual));
+    }
+
+    @Test
+    public void test_identityMultiply() {
+        var matrix = Matrix.matrix(
+                new float[] { 1, 2, 3, 4 },
+                new float[] { 2, 4, 4, 2 },
+                new float[] { 8, 6, 4, 1 },
+                new float[] { 0, 0, 0, 1 });
+        var expected = Matrix.matrix(
+                new float[] { 1, 2, 3, 4 },
+                new float[] { 2, 4, 4, 2 },
+                new float[] { 8, 6, 4, 1 },
+                new float[] { 0, 0, 0, 1 });
+        var actual = matrix.multiply(Matrix.IDENTITY_MATRIX);
+
+        assertTrue(expected.equals(actual));
+    }
+
+    @Test
+    public void test_identityTupleMultiply() {
+        var tuple = new float[] { 1, 2, 3, 4 };
+        var expected = new float[] { 1, 2, 3, 4 };
+        var actual = Matrix.IDENTITY_MATRIX.tupleMultiply(tuple);
+
+        assertTrue(Tuple.areEqual(expected, actual));
+    }
+
+    @Test
+    public void test_transpose() {
+        var matrix = Matrix.matrix(
+                new float[] { 0, 9, 3, 0 },
+                new float[] { 9, 8, 0, 8 },
+                new float[] { 1, 8, 5, 3 },
+                new float[] { 0, 0, 5, 8 });
+
+        var expected = Matrix.matrix(
+                new float[] { 0, 9, 1, 0 },
+                new float[] { 9, 8, 8, 0 },
+                new float[] { 3, 0, 5, 5 },
+                new float[] { 0, 8, 3, 8 });
+
+        var actual = matrix.transpose();
+
+        assertTrue(expected.equals(actual));
+    }
+
+    @Test
+    public void test_transposeIdentity() {
+        assertTrue(Matrix.IDENTITY_MATRIX.equals(Matrix.IDENTITY_MATRIX.transpose()));
+    }
 }
