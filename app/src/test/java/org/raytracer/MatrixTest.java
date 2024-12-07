@@ -204,4 +204,53 @@ public class MatrixTest {
 
         assertTrue(expected.equals(actual));
     }
+
+    @Test
+    public void test_minor3x3() {
+        var matrix = Matrix.matrix(
+                new float[] { 3, 5, 0 },
+                new float[] { 2, -1, -7 },
+                new float[] { 6, -1, 5 });
+        var submatrix = matrix.submatrix(1, 0);
+        assertEquals(25, submatrix.determinant());
+        assertEquals(25, matrix.minor(1, 0));
+    }
+
+    @Test
+    public void test_cofactor3x3() {
+        var matrix = Matrix.matrix(
+                new float[] { 3, 5, 0 },
+                new float[] { 2, -1, -7 },
+                new float[] { 6, -1, 5 });
+        assertEquals(-12, matrix.minor(0, 0));
+        assertEquals(-12, matrix.cofactor(0, 0));
+        assertEquals(25, matrix.minor(1, 0));
+        assertEquals(-25, matrix.cofactor(1, 0));
+    }
+
+    @Test
+    public void test_determinant3x3() {
+        var matrix = Matrix.matrix(
+                new float[] { 1, 2, 6 },
+                new float[] { -5, 8, -4 },
+                new float[] { 2, 6, 4 });
+        assertEquals(56, matrix.cofactor(0, 0));
+        assertEquals(12, matrix.cofactor(0, 1));
+        assertEquals(-46, matrix.cofactor(0, 2));
+        assertEquals(-196, matrix.determinant());
+    }
+
+    @Test
+    public void test_determinant4x4() {
+        var matrix = Matrix.matrix(
+                new float[] { -2, -8, 3, 5 },
+                new float[] { -3, 1, 7, 3 },
+                new float[] { 1, 2, -9, 6 },
+                new float[] { -6, 7, 7, -9 });
+        assertEquals(690, matrix.cofactor(0, 0));
+        assertEquals(447, matrix.cofactor(0, 1));
+        assertEquals(210, matrix.cofactor(0, 2));
+        assertEquals(51, matrix.cofactor(0, 3));
+        assertEquals(-4071, matrix.determinant());
+    }
 }

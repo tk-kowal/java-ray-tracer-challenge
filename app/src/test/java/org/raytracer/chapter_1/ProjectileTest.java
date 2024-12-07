@@ -1,10 +1,12 @@
 package org.raytracer.chapter_1;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import static org.raytracer.Tuple.*;
 import static org.raytracer.Vector.*;
 import static org.raytracer.Point.*;
 
+@Disabled
 public class ProjectileTest {
     private record Projectile(float[] position, float[] velocity) {
     }

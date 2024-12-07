@@ -23,8 +23,23 @@ public class Matrix {
         return matrix;
     }
 
+    public float cofactor(int row, int col) {
+        var minor = minor(row, col);
+        return row + col % 2 == 1 ? minor * -1 : minor;
+    }
+
     public float determinant() {
-        return values[0][0] * values[1][1] - values[0][1] * values[1][0];
+        float result = 0f;
+
+        if (height == 2 && width == 2) {
+            result = values[0][0] * values[1][1] - values[0][1] * values[1][0];
+        } else {
+            for (var col = 0; col < width; col++) {
+                result += values[0][col] * cofactor(0, col);
+            }
+        }
+
+        return result;
     }
 
     public boolean equals(Matrix other) {
@@ -49,6 +64,10 @@ public class Matrix {
 
     public float[] getRow(int row) {
         return values[row];
+    }
+
+    public float minor(int row, int col) {
+        return submatrix(row, col).determinant();
     }
 
     public Matrix multiply(Matrix other) {

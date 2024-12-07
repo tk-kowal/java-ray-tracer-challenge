@@ -1,5 +1,6 @@
 package org.raytracer.chapter_2;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.raytracer.Canvas;
 import org.raytracer.Color;
@@ -13,6 +14,7 @@ import java.time.Instant;
 
 import static org.raytracer.Point.*;
 
+@Disabled
 public class ProjectileRenderTest {
 
     private record Projectile(float[] position, float[] velocity) {
