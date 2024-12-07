@@ -286,4 +286,21 @@ public class MatrixTest {
                 assertTrue(expected.equals(actual));
         }
 
+        @Test
+        public void test_undoMultiplication() {
+                var matrixA = Matrix.matrix(
+                                new float[] { 3, -9, 7, 3 },
+                                new float[] { 3, -8, 2, -9 },
+                                new float[] { -4, 4, 4, 1 },
+                                new float[] { -6, 5, -1, 1 });
+
+                var matrixB = Matrix.matrix(
+                                new float[] { 8, 2, 2, 2 },
+                                new float[] { 3, -1, 7, 0 },
+                                new float[] { 7, 0, 5, 4 },
+                                new float[] { 6, -2, 0, 5 });
+
+                var matrixC = matrixA.multiply(matrixB);
+                assertTrue(matrixC.multiply(matrixB.inverse()).equals(matrixA));
+        }
 }
