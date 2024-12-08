@@ -1,5 +1,7 @@
 package org.raytracer;
 
+import java.util.Arrays;
+
 import org.raytracer.shapes.Shape;
 import org.raytracer.shapes.Sphere;
 
@@ -33,7 +35,7 @@ public class Ray {
         return new Ray(origin, direction);
     }
 
-    public static float[] intersect(Sphere s, Ray r) {
+    public static Intersection[] intersect(Sphere s, Ray r) {
         var sphereToRayVector = Tuple.subtract(r.origin(), s.origin());
         var a = Tuple.dot(r.direction(), r.direction());
         var b = 2f * Tuple.dot(r.direction(), sphereToRayVector);
@@ -42,14 +44,27 @@ public class Ray {
         var discriminant = Math.pow(b, 2) - 4 * a * c;
 
         if (discriminant < 0) {
-            return new float[0];
+            return new Intersection[0];
         } else {
-            return new float[] {
-                    (float) (-1 * b - Math.sqrt(discriminant)) / (2 * a),
-                    (float) (-1 * b + Math.sqrt(discriminant)) / (2 * a)
+            return new Intersection[] {
+                    new Intersection((float) (-1 * b - Math.sqrt(discriminant)) / (2 * a), s),
+                    new Intersection((float) (-1 * b + Math.sqrt(discriminant)) / (2 * a), s)
             };
         }
 
+    }
+
+    public static Intersection hit(Intersection[] intersections) {
+        Arrays.sort(intersections, (x1, x2) -> Float.compare(x1.t(), x2.t()));
+        for (var x : intersections) {
+            if (x.t() < 0) {
+                continue;
+            } else {
+                return x;
+            }
+        }
+
+        return null;
     }
 
 }
