@@ -4,33 +4,25 @@ public class Matrix {
 
     public int height, width;
     protected float[][] values;
-    private boolean immutable = false;
-
-    public static final Matrix IDENTITY_MATRIX = matrix(true,
-            new float[] { 1, 0, 0, 0 },
-            new float[] { 0, 1, 0, 0 },
-            new float[] { 0, 0, 1, 0 },
-            new float[] { 0, 0, 0, 1 });
 
     protected Matrix(int rows, int columns) {
-        this(rows, columns, false);
-    }
-
-    protected Matrix(int rows, int columns, boolean immutable) {
         this.values = new float[rows][columns];
         this.height = rows;
         this.width = columns;
-        this.immutable = immutable;
     }
 
     public static Matrix matrix(float[]... values) {
-        return matrix(false, values);
-    }
-
-    public static Matrix matrix(boolean immutable, float[]... values) {
-        var matrix = new Matrix(values.length, values[0].length, immutable);
+        var matrix = new Matrix(values.length, values[0].length);
         matrix.values = values;
         return matrix;
+    }
+
+    public static Matrix identity() {
+        return matrix(
+                new float[] { 1, 0, 0, 0 },
+                new float[] { 0, 1, 0, 0 },
+                new float[] { 0, 0, 1, 0 },
+                new float[] { 0, 0, 0, 1 });
     }
 
     public float cofactor(int row, int col) {
@@ -111,9 +103,6 @@ public class Matrix {
     }
 
     public Matrix set(int row, int index, float value) {
-        if (this.immutable) {
-            System.out.println("Illegally modifying an immutable matrix.");
-        }
         values[row][index] = value;
         return this;
     }
@@ -175,6 +164,54 @@ public class Matrix {
         }
 
         return str.toString();
+    }
+
+    public Matrix translate(int x, int y, int z) {
+        return this.multiply(Matrix.matrix(
+                new float[] { 1, 0, 0, x },
+                new float[] { 0, 1, 0, y },
+                new float[] { 0, 0, 1, z },
+                new float[] { 0, 0, 0, 1 }));
+    }
+
+    public Matrix scale(int x, int y, int z) {
+        return this.multiply(Matrix.matrix(
+                new float[] { x, 0, 0, 0 },
+                new float[] { 0, y, 0, 0 },
+                new float[] { 0, 0, z, 0 },
+                new float[] { 0, 0, 0, 1 }));
+    }
+
+    public Matrix rotateX(float radians) {
+        return this.multiply(Matrix.matrix(
+                new float[] { 1, 0, 0, 0 },
+                new float[] { 0, (float) Math.cos(radians), (float) (-1 * Math.sin(radians)), 0 },
+                new float[] { 0, (float) Math.sin(radians), (float) Math.cos(radians), 0 },
+                new float[] { 0, 0, 0, 1 }));
+    }
+
+    public Matrix rotateY(float radians) {
+        return this.multiply(Matrix.matrix(
+                new float[] { (float) Math.cos(radians), 0, (float) Math.sin(radians), 0 },
+                new float[] { 0, 1, 0, 0 },
+                new float[] { (float) (-1 * Math.sin(radians)), 0, (float) Math.cos(radians), 0 },
+                new float[] { 0, 0, 0, 1 }));
+    }
+
+    public Matrix rotateZ(float radians) {
+        return this.multiply(Matrix.matrix(
+                new float[] { (float) Math.cos(radians), (float) (-1 * Math.sin(radians)), 0, 0 },
+                new float[] { (float) Math.sin(radians), (float) Math.cos(radians), 0, 0 },
+                new float[] { 0, 0, 1, 0 },
+                new float[] { 0, 0, 0, 1 }));
+    }
+
+    public Matrix shear(int xy, int xz, int yx, int yz, int zx, int zy) {
+        return this.multiply(Matrix.matrix(
+                new float[] { 1, xy, xz, 0 },
+                new float[] { yx, 1, yz, 0 },
+                new float[] { zx, zy, 1, 0 },
+                new float[] { 0, 0, 0, 1 }));
     }
 
 }

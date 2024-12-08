@@ -194,7 +194,10 @@ public class TransformTest {
         assertTrue(Tuple.areEqual(Point.point(5, -5, 0), scaledPoint));
         var translatedPoint = translate.multiply(scaledPoint);
         assertTrue(Tuple.areEqual(Point.point(15, 0, 7), translatedPoint));
-        var composedTransform = translate.multiply(scale).multiply(rotate);
+        var composedTransform = Transform
+                .translate(10, 5, 7)
+                .scale(5, 5, 5)
+                .rotateX((float) Math.PI / 2);
         var pointAfterComposedTransform = composedTransform.multiply(point);
         assertTrue(Tuple.areEqual(Point.point(15, 0, 7), pointAfterComposedTransform));
     }

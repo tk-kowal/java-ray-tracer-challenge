@@ -121,7 +121,7 @@ public class MatrixTest {
                                 new float[] { 2, 4, 4, 2 },
                                 new float[] { 8, 6, 4, 1 },
                                 new float[] { 0, 0, 0, 1 });
-                var actual = matrix.multiply(Matrix.IDENTITY_MATRIX);
+                var actual = matrix.multiply(Matrix.identity());
 
                 assertTrue(expected.equals(actual));
         }
@@ -130,7 +130,7 @@ public class MatrixTest {
         public void test_identityTupleMultiply() {
                 var tuple = new float[] { 1, 2, 3, 4 };
                 var expected = new float[] { 1, 2, 3, 4 };
-                var actual = Matrix.IDENTITY_MATRIX.multiply(tuple);
+                var actual = Matrix.identity().multiply(tuple);
 
                 assertTrue(Tuple.areEqual(expected, actual));
         }
@@ -156,7 +156,7 @@ public class MatrixTest {
 
         @Test
         public void test_transposeIdentity() {
-                assertTrue(Matrix.IDENTITY_MATRIX.equals(Matrix.IDENTITY_MATRIX.transpose()));
+                assertTrue(Matrix.identity().equals(Matrix.identity().transpose()));
         }
 
         @Test
