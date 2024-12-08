@@ -10,27 +10,27 @@ public class TransformTest {
 
     @Test
     public void test_translation() {
-        var transform = Transform.translation(5, -3, 2);
+        var transform = Transform.translate(5, -3, 2);
         var point = Point.point(-3, 4, 5);
         var expected = Point.point(2, 1, 7);
-        var actual = transform.tupleMultiply(point);
+        var actual = transform.multiply(point);
         assertTrue(Tuple.areEqual(expected, actual));
     }
 
     @Test
     public void test_inverseTranslation() {
-        var transform = Transform.translation(5, -3, 2).inverse();
+        var transform = Transform.translate(5, -3, 2).inverse();
         var point = Point.point(-3, 4, 5);
         var expected = Point.point(-8, 7, 3);
-        var actual = transform.tupleMultiply(point);
+        var actual = transform.multiply(point);
         assertTrue(Tuple.areEqual(expected, actual));
     }
 
     @Test
     public void test_translateDoesNotAffectVectors() {
-        var transform = Transform.translation(5, -3, 2);
+        var transform = Transform.translate(5, -3, 2);
         var vector = Vector.vector(-3, 4, 5);
-        var actual = transform.tupleMultiply(vector);
+        var actual = transform.multiply(vector);
         assertTrue(Tuple.areEqual(vector, actual));
     }
 
@@ -38,28 +38,28 @@ public class TransformTest {
 
     @Test
     public void test_scalingPoint() {
-        var transform = Transform.scaling(2, 3, 4);
+        var transform = Transform.scale(2, 3, 4);
         var point = Point.point(-4, 6, 8);
         var expected = Point.point(-8, 18, 32);
-        var actual = transform.tupleMultiply(point);
+        var actual = transform.multiply(point);
         assertTrue(Tuple.areEqual(expected, actual));
     }
 
     @Test
     public void test_scalingVector() {
-        var transform = Transform.scaling(2, 3, 4);
+        var transform = Transform.scale(2, 3, 4);
         var vector = Vector.vector(-4, 6, 8);
         var expected = Vector.vector(-8, 18, 32);
-        var actual = transform.tupleMultiply(vector);
+        var actual = transform.multiply(vector);
         assertTrue(Tuple.areEqual(expected, actual));
     }
 
     @Test
     public void test_scalingInverse() {
-        var transform = Transform.scaling(2, 3, 4).inverse();
+        var transform = Transform.scale(2, 3, 4).inverse();
         var vector = Vector.vector(-4, 6, 8);
         var expected = Vector.vector(-2, 2, 2);
-        var actual = transform.tupleMultiply(vector);
+        var actual = transform.multiply(vector);
         assertTrue(Tuple.areEqual(expected, actual));
     }
 
@@ -67,10 +67,10 @@ public class TransformTest {
 
     @Test
     public void test_reflectAcrossX() {
-        var transform = Transform.scaling(-1, 1, 1);
+        var transform = Transform.scale(-1, 1, 1);
         var point = Point.point(2, 3, 4);
         var expected = Point.point(-2, 3, 4);
-        var actual = transform.tupleMultiply(point);
+        var actual = transform.multiply(point);
         assertTrue(Tuple.areEqual(expected, actual));
     }
 
@@ -83,8 +83,8 @@ public class TransformTest {
         var quarterRotation = Transform.rotateX((float) (Math.PI / 2));
         var expectedHalfQuarter = Point.point(0, (float) (Math.sqrt(2) / 2), (float) (Math.sqrt(2) / 2));
         var expectedQuarter = Point.point(0, 0, 1);
-        var actualHalfQuarter = halfQuarterRotation.tupleMultiply(point);
-        var actualQuarter = quarterRotation.tupleMultiply(point);
+        var actualHalfQuarter = halfQuarterRotation.multiply(point);
+        var actualQuarter = quarterRotation.multiply(point);
         assertTrue(Tuple.areEqual(expectedHalfQuarter, actualHalfQuarter));
         assertTrue(Tuple.areEqual(expectedQuarter, actualQuarter));
     }
@@ -94,7 +94,7 @@ public class TransformTest {
         var point = Point.point(0, 1, 0);
         var halfQuarterRotation = Transform.rotateX((float) (Math.PI / 4)).inverse();
         var expectedHalfQuarter = Point.point(0, (float) (Math.sqrt(2) / 2), (float) (-1 * Math.sqrt(2) / 2));
-        var actualHalfQuarter = halfQuarterRotation.tupleMultiply(point);
+        var actualHalfQuarter = halfQuarterRotation.multiply(point);
         assertTrue(Tuple.areEqual(expectedHalfQuarter, actualHalfQuarter));
     }
 
@@ -105,8 +105,8 @@ public class TransformTest {
         var quarterRotation = Transform.rotateY((float) (Math.PI / 2));
         var expectedHalfQuarter = Point.point((float) (Math.sqrt(2) / 2), 0, (float) (Math.sqrt(2) / 2));
         var expectedQuarter = Point.point(1, 0, 0);
-        var actualHalfQuarter = halfQuarterRotation.tupleMultiply(point);
-        var actualQuarter = quarterRotation.tupleMultiply(point);
+        var actualHalfQuarter = halfQuarterRotation.multiply(point);
+        var actualQuarter = quarterRotation.multiply(point);
         assertTrue(Tuple.areEqual(expectedHalfQuarter, actualHalfQuarter));
         assertTrue(Tuple.areEqual(expectedQuarter, actualQuarter));
     }
@@ -118,8 +118,8 @@ public class TransformTest {
         var quarterRotation = Transform.rotateZ((float) (Math.PI / 2));
         var expectedHalfQuarter = Point.point((float) (-1 * Math.sqrt(2) / 2), (float) (Math.sqrt(2) / 2), 0);
         var expectedQuarter = Point.point(-1, 0, 0);
-        var actualHalfQuarter = halfQuarterRotation.tupleMultiply(point);
-        var actualQuarter = quarterRotation.tupleMultiply(point);
+        var actualHalfQuarter = halfQuarterRotation.multiply(point);
+        var actualQuarter = quarterRotation.multiply(point);
         assertTrue(Tuple.areEqual(expectedHalfQuarter, actualHalfQuarter));
         assertTrue(Tuple.areEqual(expectedQuarter, actualQuarter));
     }
@@ -131,7 +131,7 @@ public class TransformTest {
         var point = Point.point(2, 3, 4);
         var transform = Transform.shear(1, 0, 0, 0, 0, 0);
         var expected = Point.point(5, 3, 4);
-        var actual = transform.tupleMultiply(point);
+        var actual = transform.multiply(point);
         assertTrue(Tuple.areEqual(expected, actual));
     }
 
@@ -140,7 +140,7 @@ public class TransformTest {
         var point = Point.point(2, 3, 4);
         var transform = Transform.shear(0, 1, 0, 0, 0, 0);
         var expected = Point.point(6, 3, 4);
-        var actual = transform.tupleMultiply(point);
+        var actual = transform.multiply(point);
         assertTrue(Tuple.areEqual(expected, actual));
     }
 
@@ -149,7 +149,7 @@ public class TransformTest {
         var point = Point.point(2, 3, 4);
         var transform = Transform.shear(0, 0, 1, 0, 0, 0);
         var expected = Point.point(2, 5, 4);
-        var actual = transform.tupleMultiply(point);
+        var actual = transform.multiply(point);
         assertTrue(Tuple.areEqual(expected, actual));
     }
 
@@ -158,7 +158,7 @@ public class TransformTest {
         var point = Point.point(2, 3, 4);
         var transform = Transform.shear(0, 0, 0, 1, 0, 0);
         var expected = Point.point(2, 7, 4);
-        var actual = transform.tupleMultiply(point);
+        var actual = transform.multiply(point);
         assertTrue(Tuple.areEqual(expected, actual));
     }
 
@@ -167,7 +167,7 @@ public class TransformTest {
         var point = Point.point(2, 3, 4);
         var transform = Transform.shear(0, 0, 0, 0, 1, 0);
         var expected = Point.point(2, 3, 6);
-        var actual = transform.tupleMultiply(point);
+        var actual = transform.multiply(point);
         assertTrue(Tuple.areEqual(expected, actual));
     }
 
@@ -176,7 +176,26 @@ public class TransformTest {
         var point = Point.point(2, 3, 4);
         var transform = Transform.shear(0, 0, 0, 0, 0, 1);
         var expected = Point.point(2, 3, 7);
-        var actual = transform.tupleMultiply(point);
+        var actual = transform.multiply(point);
         assertTrue(Tuple.areEqual(expected, actual));
+    }
+
+    // COMPOSITION
+
+    @Test
+    public void test_compose() {
+        var point = Point.point(1, 0, 1);
+        var rotate = Transform.rotateX((float) Math.PI / 2);
+        var scale = Transform.scale(5, 5, 5);
+        var translate = Transform.translate(10, 5, 7);
+        var rotatedPoint = rotate.multiply(point);
+        assertTrue(Tuple.areEqual(Point.point(1, -1, 0), rotatedPoint));
+        var scaledPoint = scale.multiply(rotatedPoint);
+        assertTrue(Tuple.areEqual(Point.point(5, -5, 0), scaledPoint));
+        var translatedPoint = translate.multiply(scaledPoint);
+        assertTrue(Tuple.areEqual(Point.point(15, 0, 7), translatedPoint));
+        var composedTransform = translate.multiply(scale).multiply(rotate);
+        var pointAfterComposedTransform = composedTransform.multiply(point);
+        assertTrue(Tuple.areEqual(Point.point(15, 0, 7), pointAfterComposedTransform));
     }
 }

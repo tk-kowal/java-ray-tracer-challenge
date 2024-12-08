@@ -2,7 +2,7 @@ package org.raytracer;
 
 public class Transform {
 
-    public static Matrix translation(int x, int y, int z) {
+    public static Matrix translate(int x, int y, int z) {
         return Matrix.matrix(
                 new float[] { 1, 0, 0, x },
                 new float[] { 0, 1, 0, y },
@@ -10,7 +10,7 @@ public class Transform {
                 new float[] { 0, 0, 0, 1 });
     }
 
-    public static Matrix scaling(int x, int y, int z) {
+    public static Matrix scale(int x, int y, int z) {
         return Matrix.matrix(
                 new float[] { x, 0, 0, 0 },
                 new float[] { 0, y, 0, 0 },

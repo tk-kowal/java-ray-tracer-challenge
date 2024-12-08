@@ -153,7 +153,7 @@ public class Matrix {
         return result;
     }
 
-    public float[] tupleMultiply(float[] tuple) {
+    public float[] multiply(float[] tuple) {
         var result = new float[tuple.length];
 
         for (int row = 0; row < height; row++) {
