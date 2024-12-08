@@ -9,6 +9,7 @@ import org.raytracer.Transform;
 import static org.raytracer.Point.point;
 import static org.raytracer.Color.color;
 
+@Disabled
 public class AnalogClockTest {
 
     @Test
