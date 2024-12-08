@@ -17,16 +17,20 @@ public class Ray {
         this.direction = direction;
     }
 
-    public float[] origin() {
-        return this.origin;
-    }
-
     public float[] direction() {
         return this.direction;
     }
 
+    public float[] origin() {
+        return this.origin;
+    }
+
     public float[] position(float time) {
         return Tuple.add(origin, Vector.multiply(direction, time));
+    }
+
+    public Ray transform(Matrix transform) {
+        return new Ray(transform.multiply(origin), transform.multiply(direction));
     }
 
     // static
@@ -36,9 +40,10 @@ public class Ray {
     }
 
     public static Intersection[] intersect(Sphere s, Ray r) {
-        var sphereToRayVector = Tuple.subtract(r.origin(), s.origin());
-        var a = Tuple.dot(r.direction(), r.direction());
-        var b = 2f * Tuple.dot(r.direction(), sphereToRayVector);
+        var transformedRay = r.transform(s.transform().inverse());
+        var sphereToRayVector = Tuple.subtract(transformedRay.origin(), s.origin());
+        var a = Tuple.dot(transformedRay.direction(), transformedRay.direction());
+        var b = 2f * Tuple.dot(transformedRay.direction(), sphereToRayVector);
         var c = Tuple.dot(sphereToRayVector, sphereToRayVector) - 1f;
 
         var discriminant = Math.pow(b, 2) - 4 * a * c;

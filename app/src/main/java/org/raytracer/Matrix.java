@@ -166,7 +166,7 @@ public class Matrix {
         return str.toString();
     }
 
-    public Matrix translate(int x, int y, int z) {
+    public Matrix translate(float x, float y, float z) {
         return this.multiply(Matrix.matrix(
                 new float[] { 1, 0, 0, x },
                 new float[] { 0, 1, 0, y },
@@ -174,7 +174,7 @@ public class Matrix {
                 new float[] { 0, 0, 0, 1 }));
     }
 
-    public Matrix scale(int x, int y, int z) {
+    public Matrix scale(float x, float y, float z) {
         return this.multiply(Matrix.matrix(
                 new float[] { x, 0, 0, 0 },
                 new float[] { 0, y, 0, 0 },
@@ -206,7 +206,7 @@ public class Matrix {
                 new float[] { 0, 0, 0, 1 }));
     }
 
-    public Matrix shear(int xy, int xz, int yx, int yz, int zx, int zy) {
+    public Matrix shear(float xy, float xz, float yx, float yz, float zx, float zy) {
         return this.multiply(Matrix.matrix(
                 new float[] { 1, xy, xz, 0 },
                 new float[] { yx, 1, yz, 0 },

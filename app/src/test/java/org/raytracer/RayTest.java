@@ -126,4 +126,44 @@ public class RayTest {
         assertEquals(x4.t(), Ray.hit(xs).t());
     }
 
+    // transforming rays
+
+    @Test
+    public void test_translateRay() {
+        var ray = ray(point(1, 2, 3), vector(0, 1, 0));
+        var transform = Transform.translate(3, 4, 5);
+        var newRay = ray.transform(transform);
+        assertTrue(Tuple.areEqual(point(4, 6, 8), newRay.origin()));
+        assertTrue(Tuple.areEqual(vector(0, 1, 0), newRay.direction()));
+    }
+
+    @Test
+    public void test_scaleRay() {
+        var ray = ray(point(1, 2, 3), vector(0, 1, 0));
+        var transform = Transform.scale(2, 3, 4);
+        var newRay = ray.transform(transform);
+        assertTrue(Tuple.areEqual(point(2, 6, 12), newRay.origin()));
+        assertTrue(Tuple.areEqual(vector(0, 3, 0), newRay.direction()));
+    }
+
+    @Test
+    public void test_intersectScaledSphere() {
+        var ray = ray(point(0, 0, -5), vector(0, 0, 1));
+        var sphere = new Sphere(0);
+        sphere.setTransform(Transform.scale(2, 2, 2));
+        var xs = Ray.intersect(sphere, ray);
+        assertEquals(2, xs.length);
+        assertEquals(3f, xs[0].t());
+        assertEquals(7f, xs[1].t());
+    }
+
+    @Test
+    public void test_intersectTranslatedSphere() {
+        var ray = ray(point(0, 0, -5), vector(0, 0, 1));
+        var sphere = new Sphere(0);
+        sphere.setTransform(Transform.translate(5, 0, 0));
+        var xs = Ray.intersect(sphere, ray);
+        assertEquals(0, xs.length);
+    }
+
 }

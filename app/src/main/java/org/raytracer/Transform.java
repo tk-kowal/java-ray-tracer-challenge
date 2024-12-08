@@ -1,11 +1,11 @@
 package org.raytracer;
 
 public class Transform {
-    public static Matrix translate(int x, int y, int z) {
+    public static Matrix translate(float x, float y, float z) {
         return Matrix.identity().translate(x, y, z);
     }
 
-    public static Matrix scale(int x, int y, int z) {
+    public static Matrix scale(float x, float y, float z) {
         return Matrix.identity().scale(x, y, z);
     }
 
@@ -21,7 +21,7 @@ public class Transform {
         return Matrix.identity().rotateZ(radians);
     }
 
-    public static Matrix shear(int xy, int xz, int yx, int yz, int zx, int zy) {
+    public static Matrix shear(float xy, float xz, float yx, float yz, float zx, float zy) {
         return Matrix.identity().shear(xy, xz, yx, yz, zx, zy);
     }
 
