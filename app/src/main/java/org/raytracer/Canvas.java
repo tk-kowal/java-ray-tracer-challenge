@@ -33,6 +33,10 @@ public class Canvas implements Iterable<float[]> {
         pixels[y][x] = color;
     }
 
+    public void writePixel(float[] point, float[] color) {
+        writePixel(Math.round(point[0]), Math.round(point[1]), color);
+    }
+
     public float[] pixelAt(int x, int y) {
         return pixels[y][x];
     }
