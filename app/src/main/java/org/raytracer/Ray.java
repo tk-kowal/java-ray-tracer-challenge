@@ -1,8 +1,12 @@
 package org.raytracer;
 
+import org.raytracer.shapes.Shape;
 import org.raytracer.shapes.Sphere;
 
 public class Ray {
+
+    public record Intersection(float t, Shape object) {
+    }
 
     private float[] origin, direction;
 

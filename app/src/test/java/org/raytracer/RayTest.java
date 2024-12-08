@@ -77,4 +77,12 @@ public class RayTest {
         assertEquals(-4.0f, intersections[1]);
     }
 
+    @Test
+    public void test_intersectionIncludesTimeAndObject() {
+        var shape = new Sphere(0);
+        var intersection = new Ray.Intersection(3.5f, shape);
+        assertEquals(3.5, intersection.t());
+        assertEquals(shape.id(), intersection.object().id());
+    }
+
 }
