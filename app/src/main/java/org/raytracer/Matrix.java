@@ -4,28 +4,37 @@ public class Matrix {
 
     public int height, width;
     protected float[][] values;
+    private boolean immutable = false;
 
-    public static final Matrix IDENTITY_MATRIX = matrix(
+    public static final Matrix IDENTITY_MATRIX = matrix(true,
             new float[] { 1, 0, 0, 0 },
             new float[] { 0, 1, 0, 0 },
             new float[] { 0, 0, 1, 0 },
             new float[] { 0, 0, 0, 1 });
 
     protected Matrix(int rows, int columns) {
+        this(rows, columns, false);
+    }
+
+    protected Matrix(int rows, int columns, boolean immutable) {
         this.values = new float[rows][columns];
         this.height = rows;
         this.width = columns;
+        this.immutable = immutable;
     }
 
     public static Matrix matrix(float[]... values) {
-        var matrix = new Matrix(values.length, values[0].length);
+        return matrix(false, values);
+    }
+
+    public static Matrix matrix(boolean immutable, float[]... values) {
+        var matrix = new Matrix(values.length, values[0].length, immutable);
         matrix.values = values;
         return matrix;
     }
 
     public float cofactor(int row, int col) {
         var minor = minor(row, col);
-        // var flipSign = (row + col) % 2 != 0;
         return ((row + col) % 2 != 0) ? minor * -1 : minor;
     }
 
@@ -101,8 +110,12 @@ public class Matrix {
         return result;
     }
 
-    public void set(int row, int index, float value) {
+    public Matrix set(int row, int index, float value) {
+        if (this.immutable) {
+            System.out.println("Illegally modifying an immutable matrix.");
+        }
         values[row][index] = value;
+        return this;
     }
 
     public Matrix submatrix(int rowToRemove, int colToRemove) {
