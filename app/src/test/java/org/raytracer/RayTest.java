@@ -166,4 +166,16 @@ public class RayTest {
         assertEquals(0, xs.length);
     }
 
+    // tests to build intuition
+
+    @Test
+    public void test_scratch() {
+        var ray = ray(point(0, 0, 0), vector(0, 0, 1));
+        System.out.println(ray);
+        var sphere = new Sphere(0);
+        sphere.setTransform(Transform.scale(2, 1, 1).translate(1, 0, 0));
+        var newRay = ray.transform(sphere.transform().inverse());
+        System.out.println(newRay);
+    }
+
 }

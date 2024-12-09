@@ -33,6 +33,10 @@ public class Ray {
         return new Ray(transform.multiply(origin), transform.multiply(direction));
     }
 
+    public String toString() {
+        return "Origin: " + Tuple.pretty(origin) + " Direction: " + Tuple.pretty(direction) + System.lineSeparator();
+    }
+
     // static
 
     public static Ray ray(float[] origin, float[] direction) {
@@ -41,7 +45,7 @@ public class Ray {
 
     public static Intersection[] intersect(Sphere s, Ray r) {
         var transformedRay = r.transform(s.transform().inverse());
-        var sphereToRayVector = Tuple.subtract(transformedRay.origin(), s.origin());
+        var sphereToRayVector = Tuple.subtract(transformedRay.origin(), s.worldOrigin());
         var a = Tuple.dot(transformedRay.direction(), transformedRay.direction());
         var b = 2f * Tuple.dot(transformedRay.direction(), sphereToRayVector);
         var c = Tuple.dot(sphereToRayVector, sphereToRayVector) - 1f;
