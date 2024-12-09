@@ -37,4 +37,8 @@ public class Vector extends Tuple {
         float magnitude = magnitude(tuple);
         return divide(tuple, magnitude);
     }
+
+    public static float[] reflect(float[] vector, float[] normal) {
+        return subtract(vector, multiply(multiply(normal, 2), dot(vector, normal)));
+    }
 }

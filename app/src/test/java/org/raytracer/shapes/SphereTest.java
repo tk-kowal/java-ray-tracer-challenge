@@ -6,8 +6,12 @@ import static org.raytracer.Vector.vector;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.raytracer.Matrix;
+import org.raytracer.Scalar;
 import org.raytracer.Transform;
 import org.raytracer.Tuple;
+import org.raytracer.Material;
+
+import com.google.errorprone.annotations.Var;
 
 public class SphereTest {
 
@@ -73,6 +77,20 @@ public class SphereTest {
         var expected = vector(0, 0.97014f, -0.24254f);
         var actual = sphere.normalAt(0, (float) (Math.sqrt(2) / 2), (float) (-1 * (Math.sqrt(2) / 2)));
         assertTrue(Tuple.areEqual(expected, actual));
+    }
+
+    // Material
+
+    @Test
+    public void test_sphereHasDefaultMaterial() {
+        var sphere = new Sphere(0);
+        var defaultMaterial = new Material();
+        var sphereMaterial = sphere.material();
+        assertTrue(Scalar.areEqual(sphereMaterial.ambient(), defaultMaterial.ambient()));
+        assertTrue(Scalar.areEqual(sphereMaterial.diffuse(), defaultMaterial.diffuse()));
+        assertTrue(Scalar.areEqual(sphereMaterial.specular(), defaultMaterial.specular()));
+        assertTrue(Scalar.areEqual(sphereMaterial.shininess(), defaultMaterial.shininess()));
+        assertTrue(Tuple.areEqual(sphereMaterial.color(), defaultMaterial.color()));
     }
 
 }

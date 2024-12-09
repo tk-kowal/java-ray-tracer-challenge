@@ -3,9 +3,13 @@ package org.raytracer.chapter_5;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.raytracer.Canvas;
+import org.raytracer.Lighting;
+import org.raytracer.Material;
 import org.raytracer.PpmExporter;
 import org.raytracer.Ray;
 import org.raytracer.Transform;
+import org.raytracer.Tuple;
+import org.raytracer.lights.PointLight;
 import org.raytracer.shapes.Sphere;
 
 import static org.raytracer.Color.color;
@@ -22,10 +26,14 @@ public class DrawSphereTest {
 
     @Test
     public void test_drawSphere() {
-        var canvasSideLength = 100;
+        var canvasSideLength = 720;
         var canvas = new Canvas(canvasSideLength, canvasSideLength);
         var sphere = new Sphere(0);
-        sphere.setTransform(Transform.translate(1f, 0, 0));
+        sphere.material().setColor(color(1f, 0.2f, 1f));
+
+        var lightPosition = point(-10, 10, -10);
+        var lightColor = color(1, 1, 1);
+        var light = new PointLight(lightPosition, lightColor);
 
         var wallZ = 10;
         var wallSize = 7f;
@@ -37,7 +45,6 @@ public class DrawSphereTest {
         var startRender = Instant.now();
         for (var y = 0; y < canvasSideLength; y++) {
             var worldY = half - pixelSize * y;
-            var color = color(1, y / (float) canvasSideLength, 0);
 
             for (var x = 0; x < canvasSideLength; x++) {
                 var worldX = -1 * half + pixelSize * x;
@@ -45,8 +52,12 @@ public class DrawSphereTest {
                 var position = point(worldX, worldY, wallZ);
                 var ray = ray(rayOrigin, normalize(subtract(position, rayOrigin)));
                 var xs = Ray.intersect(sphere, ray);
-                if (Ray.hit(xs) != null) {
-                    canvas.writePixel(x, y, color);
+                var hit = Ray.hit(xs);
+                if (hit != null) {
+                    var point = ray.position(hit.t());
+                    var normal = sphere.normalAt(point[0], point[1], point[2]);
+                    var eye = Tuple.multiply(ray.direction(), -1f);
+                    canvas.writePixel(x, y, Lighting.lighting(sphere.material(), light, point, eye, normal));
                 }
             }
         }

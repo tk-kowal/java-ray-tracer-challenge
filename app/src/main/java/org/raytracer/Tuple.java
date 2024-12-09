@@ -72,6 +72,14 @@ public class Tuple {
         return result;
     }
 
+    public static float[] multiply(float[] a, float[] b) {
+        var result = new float[a.length];
+        for (int i = 0; i < a.length; i++) {
+            result[i] = a[i] * b[i];
+        }
+        return result;
+    }
+
     public static float[] subtract(float[] a, float[] b) {
         if (a.length != b.length) {
             throw new IllegalArgumentException("Tuples must be of equal length.");

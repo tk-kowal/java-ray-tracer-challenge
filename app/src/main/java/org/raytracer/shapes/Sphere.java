@@ -13,8 +13,7 @@ public class Sphere extends Shape {
 
     public float[] normalAt(float x, float y, float z) {
         var objectNormal = Tuple.subtract(transform.inverse().multiply(point(x, y, z)), objectOrigin());
-        var worldNormal = transform.inverse().transpose().multiply(objectNormal);
-        worldNormal[3] = 0;
+        var worldNormal = transform.submatrix(3, 3).inverse().transpose().multiply(objectNormal);
         return Vector.normalize(worldNormal);
     }
 
