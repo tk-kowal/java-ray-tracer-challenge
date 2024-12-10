@@ -15,8 +15,18 @@ public abstract class Light {
         return this.position;
     }
 
+    public Light setPosition(float[] position) {
+        this.position = position;
+        return this;
+    }
+
     public float[] intensity() {
         return this.intensity;
+    }
+
+    public Light setColor(float[] i) {
+        this.intensity = i;
+        return this;
     }
 
     public boolean equals(Object other) {

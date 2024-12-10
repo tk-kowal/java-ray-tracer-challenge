@@ -8,7 +8,16 @@ import static org.raytracer.Vector.*;
 
 public class Phong {
 
-    public record PhongParams(float t, Shape s, float[] point, float[] eyev, float[] normalv) {
+    public record PhongParams(float t, Shape s, float[] point, float[] eyev, float[] normalv, boolean isInside) {
+    }
+
+    public static float[] colorAt(World w, Ray r) {
+        var xs = Ray.intersect(w, r);
+        if (xs.isEmpty()) {
+            return color(0, 0, 0);
+        }
+        var params = prepare(Ray.hit(xs), r);
+        return shadeHit(w, params);
     }
 
     public static float[] lighting(Material m, Light l, float[] point, float[] eyev, float[] normalv) {
@@ -33,10 +42,26 @@ public class Phong {
         return add(add(ambient, diffuse), specular);
     }
 
+    public static float[] shadeHit(World w, PhongParams p) {
+        return lighting(
+                p.s().material(),
+                w.lights().getFirst(),
+                p.point(),
+                p.eyev(),
+                p.normalv());
+    }
+
     public static PhongParams prepare(Ray.Intersection i, Ray r) {
         var object = i.object();
         var point = r.position(i.t());
-        return new PhongParams(i.t(), i.object(), point, multiply(r.direction(), -1f), object.normalAt(point));
+        var normalv = object.normalAt(point);
+        var eyev = multiply(r.direction(), -1);
+        var isInside = false;
+        if (Vector.dot(normalv, eyev) < 0) {
+            isInside = true;
+            normalv = multiply(normalv, -1);
+        }
+        return new PhongParams(i.t(), i.object(), point, eyev, normalv, isInside);
     }
 
 }

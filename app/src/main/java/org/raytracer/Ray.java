@@ -73,8 +73,12 @@ public class Ray {
         return xs;
     }
 
-    public static Intersection hit(Intersection[] intersections) {
-        for (var x : intersections) {
+    public static Intersection hit(Intersection[] xs) {
+        return hit(List.of(xs));
+    }
+
+    public static Intersection hit(List<Intersection> xs) {
+        for (var x : xs) {
             if (x.t() < 0) {
                 continue;
             } else {

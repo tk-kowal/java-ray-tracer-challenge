@@ -88,4 +88,66 @@ public class PhongTest {
         assertTrue(Tuple.areEqual(vector(0, 0, -1), result.normalv()));
     }
 
+    @Test
+    public void test_prepareHitInsideShape() {
+        var r = ray(point(0, 0, 0), vector(0, 0, 1));
+        var s = new Sphere(0);
+        var i = new Ray.Intersection(1, s);
+        var result = Phong.prepare(i, r);
+        assertTrue(result.isInside());
+        assertTrue(Tuple.areEqual(vector(0, 0, -1), result.normalv()));
+    }
+
+    // World
+
+    @Test
+    public void test_shadeHit() {
+        var w = World.defaultWorld();
+        var r = ray(point(0, 0, -5), vector(0, 0, 1));
+        var s = w.objects().getFirst();
+        var i = new Ray.Intersection(4, s);
+        var params = Phong.prepare(i, r);
+        var result = Phong.shadeHit(w, params);
+        assertTrue(Tuple.areEqual(color(0.38066f, 0.47583f, 0.2855f), result));
+    }
+
+    @Test
+    public void test_shadeHitInsideShape() {
+        var w = World.defaultWorld();
+        w.lights().get(0).setPosition(point(0f, 0.25f, 0f));
+        var r = ray(point(0, 0, 0), vector(0, 0, 1));
+        var s = w.objects().getLast();
+        var i = new Ray.Intersection(0.5f, s);
+        var params = Phong.prepare(i, r);
+        var result = Phong.shadeHit(w, params);
+        assertTrue(Tuple.areEqual(color(0.90498f, 0.90498f, 0.90498f), result));
+    }
+
+    @Test
+    public void test_colorAtMiss() {
+        var w = World.defaultWorld();
+        var r = ray(point(0, 0, -5), vector(0, 1, 0));
+        var result = Phong.colorAt(w, r);
+        assertTrue(Tuple.areEqual(color(0, 0, 0), result));
+    }
+
+    @Test
+    public void test_colorAtHit() {
+        var w = World.defaultWorld();
+        var r = ray(point(0, 0, -5), vector(0, 0, 1));
+        var result = Phong.colorAt(w, r);
+        assertTrue(Tuple.areEqual(color(.38066f, .47583f, .2855f), result));
+    }
+
+    @Test
+    public void test_colorWithIntersectionBehindRay() {
+        var w = World.defaultWorld();
+        w.objects().getFirst().material().setAmbient(1f); // outer sphere
+        w.objects().getLast().material().setAmbient(1f); // inner sphere
+        var r = ray(point(0, 0, 0.75f), vector(0, 0, -1));
+        var expected = w.objects().getLast().material().color();
+        var actual = Phong.colorAt(w, r);
+        assertTrue(Tuple.areEqual(expected, actual));
+    }
+
 }
