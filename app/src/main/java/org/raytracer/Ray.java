@@ -1,6 +1,8 @@
 package org.raytracer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.raytracer.shapes.Shape;
 import org.raytracer.shapes.Sphere;
@@ -60,11 +62,18 @@ public class Ray {
                     new Intersection((float) (-1 * b + Math.sqrt(discriminant)) / (2 * a), s)
             };
         }
+    }
 
+    public static List<Intersection> intersect(World w, Ray r) {
+        List<Intersection> xs = new ArrayList<>();
+        for (var o : w.objects()) {
+            xs.addAll(List.of(intersect((Sphere) o, r)));
+        }
+        xs.sort((x1, x2) -> Float.compare(x1.t(), x2.t()));
+        return xs;
     }
 
     public static Intersection hit(Intersection[] intersections) {
-        Arrays.sort(intersections, (x1, x2) -> Float.compare(x1.t(), x2.t()));
         for (var x : intersections) {
             if (x.t() < 0) {
                 continue;

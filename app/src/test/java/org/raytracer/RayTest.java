@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.raytracer.Point.point;
 import static org.raytracer.Vector.vector;
+
+import java.util.Arrays;
+
 import static org.raytracer.Ray.ray;
 
 import org.junit.jupiter.api.Test;
@@ -123,6 +126,7 @@ public class RayTest {
         var x3 = new Ray.Intersection(-3, shape);
         var x4 = new Ray.Intersection(2, shape);
         var xs = new Ray.Intersection[] { x1, x2, x3, x4 };
+        Arrays.sort(xs, (a, b) -> Float.compare(a.t(), b.t()));
         assertEquals(x4.t(), Ray.hit(xs).t());
     }
 
@@ -166,16 +170,17 @@ public class RayTest {
         assertEquals(0, xs.length);
     }
 
-    // tests to build intuition
+    // WORLD
 
     @Test
-    public void test_scratch() {
-        var ray = ray(point(0, 0, 0), vector(0, 0, 1));
-        System.out.println(ray);
-        var sphere = new Sphere(0);
-        sphere.setTransform(Transform.scale(2, 1, 1).translate(1, 0, 0));
-        var newRay = ray.transform(sphere.transform().inverse());
-        System.out.println(newRay);
+    public void test_intersectWorld() {
+        var world = World.defaultWorld();
+        var ray = ray(point(0, 0, -5), vector(0, 0, 1));
+        var xs = Ray.intersect(world, ray);
+        assertEquals(4, xs.size());
+        assertTrue(Scalar.areEqual(4, xs.get(0).t()));
+        assertTrue(Scalar.areEqual(4.5f, xs.get(1).t()));
+        assertTrue(Scalar.areEqual(5.5f, xs.get(2).t()));
+        assertTrue(Scalar.areEqual(6, xs.get(3).t()));
     }
-
 }

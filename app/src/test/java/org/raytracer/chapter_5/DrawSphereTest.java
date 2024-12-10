@@ -3,11 +3,9 @@ package org.raytracer.chapter_5;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.raytracer.Canvas;
-import org.raytracer.Lighting;
-import org.raytracer.Material;
+import org.raytracer.Phong;
 import org.raytracer.PpmExporter;
 import org.raytracer.Ray;
-import org.raytracer.Transform;
 import org.raytracer.Tuple;
 import org.raytracer.lights.PointLight;
 import org.raytracer.shapes.Sphere;
@@ -27,12 +25,13 @@ public class DrawSphereTest {
 
     @Test
     public void test_drawSphere() {
-        var canvasSideLength = 100;
+        var canvasSideLength = 720;
         var canvas = new Canvas(canvasSideLength, canvasSideLength);
         var sphere = new Sphere(0);
         sphere.material().setColor(color(0f, 0.2f, 1f));
         sphere.material().setShininess(50f);
-        sphere.setTransform(Transform.rotateZ((float) (-1 * Math.PI / 4)).scale(0.5f, 1, 1));
+        // sphere.setTransform(Transform.rotateZ((float) (-1 * Math.PI / 4)).scale(0.5f,
+        // 1, 1));
 
         var lightPosition = point(10, 10, -5);
         var lightColor = color(1, 1, 1);
@@ -60,7 +59,7 @@ public class DrawSphereTest {
                     var point = ray.position(hit.t());
                     var normal = sphere.normalAt(point[0], point[1], point[2]);
                     var eye = Tuple.multiply(ray.direction(), -1f);
-                    canvas.writePixel(x, y, Lighting.lighting(sphere.material(), light, point, eye, normal));
+                    canvas.writePixel(x, y, Phong.lighting(sphere.material(), light, point, eye, normal));
                 }
             }
         }

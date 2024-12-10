@@ -32,6 +32,8 @@ public abstract class Shape {
 
     public abstract float[] normalAt(float x, float y, float z);
 
+    public abstract float[] normalAt(float[] point);
+
     public float[] objectOrigin() {
         return point(0, 0, 0);
     }
@@ -48,4 +50,6 @@ public abstract class Shape {
     public float[] worldOrigin() {
         return this.origin;
     }
+
+    public abstract boolean equals(Object other);
 }

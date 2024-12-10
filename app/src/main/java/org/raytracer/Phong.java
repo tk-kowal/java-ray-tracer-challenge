@@ -1,10 +1,15 @@
 package org.raytracer;
 
 import org.raytracer.lights.Light;
+import org.raytracer.shapes.Shape;
+
 import static org.raytracer.Color.color;
 import static org.raytracer.Vector.*;
 
-public class Lighting {
+public class Phong {
+
+    public record PhongParams(float t, Shape s, float[] point, float[] eyev, float[] normalv) {
+    }
 
     public static float[] lighting(Material m, Light l, float[] point, float[] eyev, float[] normalv) {
         var effectiveColor = Tuple.multiply(m.color(), l.intensity());
@@ -26,6 +31,12 @@ public class Lighting {
         }
 
         return add(add(ambient, diffuse), specular);
+    }
+
+    public static PhongParams prepare(Ray.Intersection i, Ray r) {
+        var object = i.object();
+        var point = r.position(i.t());
+        return new PhongParams(i.t(), i.object(), point, multiply(r.direction(), -1f), object.normalAt(point));
     }
 
 }
