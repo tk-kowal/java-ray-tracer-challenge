@@ -37,4 +37,8 @@ public class Material {
         this.color = color;
     }
 
+    public void setShininess(float s) {
+        this.shininess = s;
+    }
+
 }

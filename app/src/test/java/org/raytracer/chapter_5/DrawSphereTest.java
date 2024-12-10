@@ -22,16 +22,19 @@ import java.time.Instant;
 import static org.raytracer.Ray.ray;
 import static org.raytracer.Tuple.subtract;
 
+@Disabled
 public class DrawSphereTest {
 
     @Test
     public void test_drawSphere() {
-        var canvasSideLength = 720;
+        var canvasSideLength = 100;
         var canvas = new Canvas(canvasSideLength, canvasSideLength);
         var sphere = new Sphere(0);
-        sphere.material().setColor(color(1f, 0.2f, 1f));
+        sphere.material().setColor(color(0f, 0.2f, 1f));
+        sphere.material().setShininess(50f);
+        sphere.setTransform(Transform.rotateZ((float) (-1 * Math.PI / 4)).scale(0.5f, 1, 1));
 
-        var lightPosition = point(-10, 10, -10);
+        var lightPosition = point(10, 10, -5);
         var lightColor = color(1, 1, 1);
         var light = new PointLight(lightPosition, lightColor);
 

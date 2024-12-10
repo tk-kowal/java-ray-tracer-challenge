@@ -6,9 +6,9 @@ import static org.raytracer.Vector.*;
 
 public class Lighting {
 
-    public static float[] lighting(Material m, Light l, float[] position, float[] eyev, float[] normalv) {
+    public static float[] lighting(Material m, Light l, float[] point, float[] eyev, float[] normalv) {
         var effectiveColor = Tuple.multiply(m.color(), l.intensity());
-        var lightv = normalize(Tuple.subtract(l.position(), position));
+        var lightv = normalize(Tuple.subtract(l.position(), point));
         var ambient = Tuple.multiply(effectiveColor, m.ambient());
         var diffuse = color(0, 0, 0);
         var specular = color(0, 0, 0);
