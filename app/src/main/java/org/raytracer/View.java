@@ -13,6 +13,6 @@ public class View {
                 new float[] { trueUpv[0], trueUpv[1], trueUpv[2], 0 },
                 new float[] { -1 * forwardv[0], -1 * forwardv[1], -1 * forwardv[2], 0 },
                 new float[] { 0, 0, 0, 1 });
-        return orientation.multiply(Transform.translate(-1 * from[0], -1 * from[1], -1 * from[2]));
+        return orientation.multiply(Transform.translate(-1.0f * from[0], -1.0f * from[1], -1.0f * from[2]));
     }
 }

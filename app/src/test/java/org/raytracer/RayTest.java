@@ -151,6 +151,15 @@ public class RayTest {
     }
 
     @Test
+    public void test_rotateRay() {
+        var ray = ray(point(0, 0, 0), vector(0, 1, 0));
+        var transform = Transform.rotateZ((float) Math.PI / 2);
+        var newRay = ray.transform(transform);
+        assertTrue(Tuple.areEqual(point(0, 0, 0), newRay.origin()));
+        assertTrue(Tuple.areEqual(vector(-1, 0, 0), newRay.direction()));
+    }
+
+    @Test
     public void test_intersectScaledSphere() {
         var ray = ray(point(0, 0, -5), vector(0, 0, 1));
         var sphere = new Sphere(0);

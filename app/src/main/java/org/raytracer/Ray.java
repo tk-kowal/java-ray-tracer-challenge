@@ -56,7 +56,7 @@ public class Ray {
 
     public static Intersection[] intersect(Sphere s, Ray r) {
         var transformedRay = r.transform(s.transform().inverse());
-        var sphereToRayVector = Tuple.subtract(transformedRay.origin(), s.worldOrigin());
+        var sphereToRayVector = Tuple.subtract(transformedRay.origin(), s.origin());
         var a = Tuple.dot(transformedRay.direction(), transformedRay.direction());
         var b = 2f * Tuple.dot(transformedRay.direction(), sphereToRayVector);
         var c = Tuple.dot(sphereToRayVector, sphereToRayVector) - 1f;

@@ -16,7 +16,7 @@ public class Sphere extends Shape {
     }
 
     public float[] normalAt(float x, float y, float z) {
-        var objectNormal = Tuple.subtract(transform.inverse().multiply(point(x, y, z)), objectOrigin());
+        var objectNormal = Tuple.subtract(transform.inverse().multiply(point(x, y, z)), origin());
         var worldNormal = transform.submatrix(3, 3).inverse().transpose().multiply(objectNormal);
         return Vector.normalize(worldNormal);
     }
@@ -24,9 +24,7 @@ public class Sphere extends Shape {
     public boolean equals(Object other) {
         if (other instanceof Sphere) {
             var otherSphere = (Sphere) other;
-            return Tuple.areEqual(origin, otherSphere.origin)
-                    && transform.equals(otherSphere.transform)
-                    && material.equals(otherSphere.material);
+            return transform.equals(otherSphere.transform) && material.equals(otherSphere.material);
         } else {
             return false;
         }

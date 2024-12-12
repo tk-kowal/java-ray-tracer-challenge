@@ -43,12 +43,25 @@ public class Camera {
         return this.pixelSize;
     }
 
-    public Ray rayForPixel(int x, int y) {
+    public Ray rayForPixel(float x, float y) {
+        // we add .5f to the pixelSize because we want to compute the ray to the center
+        // of the pixel
         var point = point(halfWidth - (x + .5f) * pixelSize, halfHeight - (y + .5f) * pixelSize, -1);
         var worldPoint = transform.inverse().multiply(point);
         var worldOrigin = transform.inverse().multiply(point(0, 0, 0));
         var worldDirection = normalize(Tuple.subtract(worldPoint, worldOrigin));
         return ray(worldOrigin, worldDirection);
+    }
+
+    public Canvas render(World w) {
+        var c = new Canvas((int) hsize, (int) vsize);
+        for (var y = 0; y < vsize; y++) {
+            for (var x = 0; x < hsize; x++) {
+                var r = rayForPixel(x, y);
+                c.writePixel(x, y, Phong.colorAt(w, r));
+            }
+        }
+        return c;
     }
 
     public void setTransform(Matrix transform) {

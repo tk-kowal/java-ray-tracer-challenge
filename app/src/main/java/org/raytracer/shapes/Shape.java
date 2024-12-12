@@ -7,13 +7,11 @@ import org.raytracer.Matrix;
 
 public abstract class Shape {
     protected final int id;
-    protected float[] origin;
     protected Matrix transform;
     protected Material material;
 
     protected Shape(int id) {
         this.id = id;
-        this.origin = point(0, 0, 0);
         this.transform = Matrix.identity();
         this.material = new Material();
     }
@@ -34,21 +32,16 @@ public abstract class Shape {
 
     public abstract float[] normalAt(float[] point);
 
-    public float[] objectOrigin() {
+    public float[] origin() {
         return point(0, 0, 0);
     }
 
     public void setTransform(Matrix newTransform) {
-        this.origin = newTransform.multiply(origin);
         this.transform = newTransform;
     }
 
     public Matrix transform() {
         return this.transform;
-    }
-
-    public float[] worldOrigin() {
-        return this.origin;
     }
 
     public abstract boolean equals(Object other);

@@ -11,8 +11,6 @@ import org.raytracer.Transform;
 import org.raytracer.Tuple;
 import org.raytracer.Material;
 
-import com.google.errorprone.annotations.Var;
-
 public class SphereTest {
 
     @Test
@@ -56,6 +54,7 @@ public class SphereTest {
     @Test
     public void test_normalNonAxial() {
         var sphere = new Sphere(0);
+        sphere.setTransform(Transform.rotateY((float) Math.PI / 4));
         var expected = vector((float) Math.sqrt(3) / 3, (float) Math.sqrt(3) / 3, (float) Math.sqrt(3) / 3);
         var actual = sphere.normalAt((float) Math.sqrt(3) / 3, (float) Math.sqrt(3) / 3, (float) Math.sqrt(3) / 3);
         assertTrue(Tuple.areEqual(expected, actual));
