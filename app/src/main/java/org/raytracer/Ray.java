@@ -23,6 +23,15 @@ public class Ray {
         return this.direction;
     }
 
+    public boolean equals(Object other) {
+        if (other instanceof Ray) {
+            var otherRay = (Ray) other;
+            return Tuple.areEqual(this.origin, otherRay.origin) && Tuple.areEqual(this.direction, otherRay.direction);
+        } else {
+            return false;
+        }
+    }
+
     public float[] origin() {
         return this.origin;
     }

@@ -44,12 +44,16 @@ public class Matrix {
         return result;
     }
 
-    public boolean equals(Matrix other) {
-        for (var i = 0; i < values.length; i++) {
-            if (Tuple.notEqual(values[i], other.getRow(i)))
-                return false;
+    public boolean equals(Object other) {
+        if (other instanceof Matrix) {
+            for (var i = 0; i < values.length; i++) {
+                if (Tuple.notEqual(values[i], ((Matrix) other).getRow(i)))
+                    return false;
+            }
+            return true;
+        } else {
+            return false;
         }
-        return true;
     }
 
     public float get(int row, int col) {
