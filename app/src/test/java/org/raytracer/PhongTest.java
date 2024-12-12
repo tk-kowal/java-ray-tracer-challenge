@@ -4,9 +4,11 @@ import org.junit.jupiter.api.Test;
 import org.raytracer.lights.PointLight;
 import org.raytracer.shapes.Sphere;
 
+import static org.raytracer.Point.isPoint;
 import static org.raytracer.Point.point;
 import static org.raytracer.Vector.vector;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.raytracer.Color.color;
 import static org.raytracer.Ray.ray;
@@ -124,6 +126,19 @@ public class PhongTest {
     }
 
     @Test
+    public void test_shadeHitInShadow() {
+        var w = World.defaultWorld();
+        w.lights().get(0).setPosition(point(0f, 0f, -10f));
+        var r = ray(point(0, 0, 5), vector(0, 0, 1));
+        var s2 = w.objects().getLast();
+        s2.setTransform(Transform.translate(0, 0, 10));
+        var i = new Ray.Intersection(4, s2);
+        var params = Phong.prepare(i, r);
+        var result = Phong.shadeHit(w, params);
+        assertTrue(Tuple.areEqual(color(0.1f, 0.1f, 0.1f), result));
+    }
+
+    @Test
     public void test_colorAtMiss() {
         var w = World.defaultWorld();
         var r = ray(point(0, 0, -5), vector(0, 1, 0));
@@ -148,6 +163,48 @@ public class PhongTest {
         var expected = w.objects().getLast().material().color();
         var actual = Phong.colorAt(w, r);
         assertTrue(Tuple.areEqual(expected, actual));
+    }
+
+    // Shadows
+
+    @Test
+    public void test_lightingWithSurfaceInShadow() {
+        var m = new Material();
+        var point = point(0, 0, 0);
+        var eyev = vector(0, 0, -1);
+        var normalv = vector(0, 0, -1);
+        var light = new PointLight(point(0, 0, -10), color(1, 1, 1));
+        var inShadow = true;
+        var result = Phong.lighting(m, light, point, eyev, normalv, inShadow);
+        assertTrue(Tuple.areEqual(color(.1f, .1f, .1f), result));
+    }
+
+    @Test
+    public void test_noShadowWhenNothingBetweenPointAndLight() {
+        var w = World.defaultWorld();
+        var p = point(0, 10, 0);
+        assertFalse(Phong.isShadowed(w, p));
+    }
+
+    @Test
+    public void test_inShadowWhenObjectBetweenPointAndLight() {
+        var w = World.defaultWorld();
+        var p = point(10, -10, 10);
+        assertTrue(Phong.isShadowed(w, p));
+    }
+
+    @Test
+    public void test_noShadowWhenObjectBehindLight() {
+        var w = World.defaultWorld();
+        var p = point(-20, 20, -20);
+        assertFalse(Phong.isShadowed(w, p));
+    }
+
+    @Test
+    public void test_noShadowWhenObjectBehindPoint() {
+        var w = World.defaultWorld();
+        var p = point(-2, 2, -2);
+        assertFalse(Phong.isShadowed(w, p));
     }
 
 }

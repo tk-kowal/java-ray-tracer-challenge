@@ -5,10 +5,12 @@ import org.raytracer.shapes.Shape;
 
 import static org.raytracer.Color.color;
 import static org.raytracer.Vector.*;
+import static org.raytracer.Ray.ray;
 
 public class Phong {
 
-    public record PhongParams(float t, Shape s, float[] point, float[] eyev, float[] normalv, boolean isInside) {
+    public record PhongParams(float t, Shape s, float[] point, float[] overpoint, float[] eyev, float[] normalv,
+            boolean isInside) {
     }
 
     public static float[] colorAt(World w, Ray r) {
@@ -20,7 +22,21 @@ public class Phong {
         return shadeHit(w, params);
     }
 
+    public static boolean isShadowed(World w, float[] p) {
+        var lp = w.lights().getFirst().position();
+        var v = Tuple.subtract(lp, p);
+        var distance = magnitude(v);
+        var r = ray(p, normalize(v));
+        var hit = Ray.hit(Ray.intersect(w, r));
+        return hit != null && hit.t() < distance;
+    }
+
     public static float[] lighting(Material m, Light l, float[] point, float[] eyev, float[] normalv) {
+        return lighting(m, l, point, eyev, normalv, false);
+    }
+
+    public static float[] lighting(Material m, Light l, float[] point, float[] eyev, float[] normalv,
+            boolean isInShadow) {
         var effectiveColor = Tuple.multiply(m.color(), l.intensity());
         var lightv = normalize(Tuple.subtract(l.position(), point));
         var ambient = Tuple.multiply(effectiveColor, m.ambient());
@@ -28,7 +44,7 @@ public class Phong {
         var specular = color(0, 0, 0);
         var lightDotNormal = dot(lightv, normalv);
 
-        if (lightDotNormal >= 0) {
+        if (!isInShadow && lightDotNormal >= 0) {
             diffuse = Tuple.multiply(Tuple.multiply(effectiveColor, m.diffuse()), lightDotNormal);
             var reflectv = reflect(multiply(lightv, -1f), normalv);
             var reflectDotEye = dot(reflectv, eyev);
@@ -43,25 +59,30 @@ public class Phong {
     }
 
     public static float[] shadeHit(World w, PhongParams p) {
+        var shadowed = isShadowed(w, p.overpoint());
         return lighting(
                 p.s().material(),
                 w.lights().getFirst(),
                 p.point(),
                 p.eyev(),
-                p.normalv());
+                p.normalv(),
+                shadowed);
     }
 
     public static PhongParams prepare(Ray.Intersection i, Ray r) {
         var object = i.object();
         var point = r.position(i.t());
         var normalv = object.normalAt(point);
+        // NOTE: when we eventually have rays exiting objects we'll need to properly
+        // negate the vector here
+        var overpoint = Tuple.add(point, Tuple.multiply(normalv, Constants.EPSILON));
         var eyev = multiply(r.direction(), -1);
         var isInside = false;
         if (Vector.dot(normalv, eyev) < 0) {
             isInside = true;
             normalv = multiply(normalv, -1);
         }
-        return new PhongParams(i.t(), i.object(), point, eyev, normalv, isInside);
+        return new PhongParams(i.t(), i.object(), point, overpoint, eyev, normalv, isInside);
     }
 
 }

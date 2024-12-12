@@ -47,6 +47,8 @@ public class Camera {
         // we add .5f to the pixelSize because we want to compute the ray to the center
         // of the pixel
         var point = point(halfWidth - (x + .5f) * pixelSize, halfHeight - (y + .5f) * pixelSize, -1);
+        // the transform says how to move the world relative to the camera, so we use
+        // the inverse here to actually move the points how the camera would move
         var worldPoint = transform.inverse().multiply(point);
         var worldOrigin = transform.inverse().multiply(point(0, 0, 0));
         var worldDirection = normalize(Tuple.subtract(worldPoint, worldOrigin));
