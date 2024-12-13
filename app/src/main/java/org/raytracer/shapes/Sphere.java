@@ -1,9 +1,8 @@
 package org.raytracer.shapes;
 
-import static org.raytracer.Point.point;
+import java.util.List;
 
-import org.raytracer.Tuple;
-import org.raytracer.Vector;
+import org.raytracer.Ray;
 
 public class Sphere extends Shape {
 
@@ -11,14 +10,8 @@ public class Sphere extends Shape {
         super(id);
     }
 
-    public float[] normalAt(float[] point) {
-        return normalAt(point[0], point[1], point[2]);
-    }
-
-    public float[] normalAt(float x, float y, float z) {
-        var objectNormal = Tuple.subtract(transform.inverse().multiply(point(x, y, z)), origin());
-        var worldNormal = transform.submatrix(3, 3).inverse().transpose().multiply(objectNormal);
-        return Vector.normalize(worldNormal);
+    public List<Ray.Intersection> intersect(Ray ray) {
+        return List.of();
     }
 
     public boolean equals(Object other) {
