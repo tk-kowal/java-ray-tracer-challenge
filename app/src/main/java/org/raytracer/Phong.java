@@ -63,7 +63,7 @@ public class Phong {
         return lighting(
                 p.s().material(),
                 w.lights().getFirst(),
-                p.point(),
+                p.overpoint(),
                 p.eyev(),
                 p.normalv(),
                 shadowed);
@@ -73,15 +73,13 @@ public class Phong {
         var object = i.object();
         var point = r.position(i.t());
         var normalv = object.normalAt(point);
-        // NOTE: when we eventually have rays exiting objects we'll need to properly
-        // negate the vector here
-        var overpoint = Tuple.add(point, Tuple.multiply(normalv, Constants.EPSILON));
         var eyev = multiply(r.direction(), -1);
         var isInside = false;
         if (Vector.dot(normalv, eyev) < 0) {
             isInside = true;
             normalv = multiply(normalv, -1);
         }
+        var overpoint = Tuple.add(point, Tuple.multiply(normalv, Constants.EPSILON));
         return new PhongParams(i.t(), i.object(), point, overpoint, eyev, normalv, isInside);
     }
 
