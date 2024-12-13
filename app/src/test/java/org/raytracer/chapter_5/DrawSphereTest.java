@@ -2,49 +2,27 @@ package org.raytracer.chapter_5;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.raytracer.Camera;
 import org.raytracer.Canvas;
 import org.raytracer.Phong;
 import org.raytracer.PpmExporter;
 import org.raytracer.Ray;
 import org.raytracer.Transform;
 import org.raytracer.Tuple;
-import org.raytracer.View;
-import org.raytracer.World;
 import org.raytracer.lights.PointLight;
 import org.raytracer.shapes.Sphere;
 
 import static org.raytracer.Color.color;
 import static org.raytracer.Point.point;
-import static org.raytracer.Vector.vector;
 import static org.raytracer.Vector.normalize;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
 
 import static org.raytracer.Ray.ray;
 import static org.raytracer.Tuple.subtract;
 
+@Disabled
 public class DrawSphereTest {
-
-    @Test
-    public void test_drawSphere2() {
-        var sphere = new Sphere(0);
-        sphere.material().setColor(color(0f, 0.2f, 1f));
-        sphere.material().setShininess(50f);
-        sphere.setTransform(Transform.scale(1, 0.5f, 1).translate(0.5f, 0, 0));
-
-        var lightPosition = point(10, 10, -5);
-        var lightColor = color(1, 1, 1);
-        var light = new PointLight(lightPosition, lightColor);
-
-        var camera = new Camera(100, 100, (float) Math.PI / 7);
-        camera.setTransform(View.transform(point(0, 0, -5), point(0, 0, 0), vector(0, 1, 0)));
-        var world = new World(List.of(sphere), List.of(light));
-        var img = camera.render(world);
-        PpmExporter.export(img, "/tmp/sphere2.ppm");
-    }
 
     @Test
     public void test_drawSphere() {
@@ -75,7 +53,7 @@ public class DrawSphereTest {
 
                 var position = point(worldX, worldY, wallZ);
                 var ray = ray(rayOrigin, normalize(subtract(position, rayOrigin)));
-                var xs = Ray.intersect(sphere, ray);
+                var xs = sphere.intersect(ray);
                 var hit = Ray.hit(xs);
                 if (hit != null) {
                     var point = ray.position(hit.t());

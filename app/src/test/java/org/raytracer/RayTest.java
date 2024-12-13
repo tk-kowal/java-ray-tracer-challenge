@@ -34,56 +34,6 @@ public class RayTest {
     }
 
     @Test
-    public void test_rayIntersectsSphereAtTwoPoints() {
-        var ray = ray(point(0, 0, -5), vector(0, 0, 1));
-        var sphere = new Sphere(0);
-        var intersections = Ray.intersect(sphere, ray);
-        assertEquals(2, intersections.length);
-        assertEquals(4f, intersections[0].t());
-        assertEquals(6f, intersections[1].t());
-        assertEquals(sphere.id(), intersections[0].object().id());
-        assertEquals(sphere.id(), intersections[1].object().id());
-    }
-
-    @Test
-    public void test_raySphereTangent() {
-        var ray = ray(point(0, 1, -5), vector(0, 0, 1));
-        var sphere = new Sphere(0);
-        var intersections = Ray.intersect(sphere, ray);
-        assertEquals(2, intersections.length);
-        assertEquals(5f, intersections[0].t());
-        assertEquals(5f, intersections[1].t());
-    }
-
-    @Test
-    public void test_raySphereMiss() {
-        var ray = ray(point(0, 2, -5), vector(0, 0, 1));
-        var sphere = new Sphere(0);
-        var intersections = Ray.intersect(sphere, ray);
-        assertEquals(0, intersections.length);
-    }
-
-    @Test
-    public void test_rayFromInsideSphereIntersectsInFrontAndBehind() {
-        var ray = ray(point(0, 0, 0), vector(0, 0, 1));
-        var sphere = new Sphere(0);
-        var intersections = Ray.intersect(sphere, ray);
-        assertEquals(2, intersections.length);
-        assertEquals(-1.0f, intersections[0].t());
-        assertEquals(1f, intersections[1].t());
-    }
-
-    @Test
-    public void test_rayFromBeyondSphereIntersectsInBehind() {
-        var ray = ray(point(0, 0, 5), vector(0, 0, 1));
-        var sphere = new Sphere(0);
-        var intersections = Ray.intersect(sphere, ray);
-        assertEquals(2, intersections.length);
-        assertEquals(-6.0f, intersections[0].t());
-        assertEquals(-4.0f, intersections[1].t());
-    }
-
-    @Test
     public void test_intersectionIncludesTimeAndObject() {
         var shape = new Sphere(0);
         var intersection = new Ray.Intersection(3.5f, shape);
@@ -157,26 +107,6 @@ public class RayTest {
         var newRay = ray.transform(transform);
         assertTrue(Tuple.areEqual(point(0, 0, 0), newRay.origin()));
         assertTrue(Tuple.areEqual(vector(-1, 0, 0), newRay.direction()));
-    }
-
-    @Test
-    public void test_intersectScaledSphere() {
-        var ray = ray(point(0, 0, -5), vector(0, 0, 1));
-        var sphere = new Sphere(0);
-        sphere.setTransform(Transform.scale(2, 2, 2));
-        var xs = Ray.intersect(sphere, ray);
-        assertEquals(2, xs.length);
-        assertEquals(3f, xs[0].t());
-        assertEquals(7f, xs[1].t());
-    }
-
-    @Test
-    public void test_intersectTranslatedSphere() {
-        var ray = ray(point(0, 0, -5), vector(0, 0, 1));
-        var sphere = new Sphere(0);
-        sphere.setTransform(Transform.translate(5, 0, 0));
-        var xs = Ray.intersect(sphere, ray);
-        assertEquals(0, xs.length);
     }
 
     // WORLD

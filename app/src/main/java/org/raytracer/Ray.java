@@ -1,11 +1,9 @@
 package org.raytracer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.raytracer.shapes.Shape;
-import org.raytracer.shapes.Sphere;
 
 public class Ray {
 
@@ -54,29 +52,10 @@ public class Ray {
         return new Ray(origin, direction);
     }
 
-    public static Intersection[] intersect(Sphere s, Ray r) {
-        var transformedRay = r.transform(s.transform().inverse());
-        var sphereToRayVector = Tuple.subtract(transformedRay.origin(), s.origin());
-        var a = Tuple.dot(transformedRay.direction(), transformedRay.direction());
-        var b = 2f * Tuple.dot(transformedRay.direction(), sphereToRayVector);
-        var c = Tuple.dot(sphereToRayVector, sphereToRayVector) - 1f;
-
-        var discriminant = Math.pow(b, 2) - 4 * a * c;
-
-        if (discriminant < 0) {
-            return new Intersection[0];
-        } else {
-            return new Intersection[] {
-                    new Intersection((float) (-1 * b - Math.sqrt(discriminant)) / (2 * a), s),
-                    new Intersection((float) (-1 * b + Math.sqrt(discriminant)) / (2 * a), s)
-            };
-        }
-    }
-
     public static List<Intersection> intersect(World w, Ray r) {
         List<Intersection> xs = new ArrayList<>();
         for (var o : w.objects()) {
-            xs.addAll(List.of(intersect((Sphere) o, r)));
+            xs.addAll(o.intersect(r));
         }
         xs.sort((x1, x2) -> Float.compare(x1.t(), x2.t()));
         return xs;

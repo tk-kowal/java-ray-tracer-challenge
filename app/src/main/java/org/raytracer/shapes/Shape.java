@@ -14,6 +14,7 @@ public abstract class Shape {
     protected final int id;
     protected Matrix transform;
     protected Material material;
+    protected float[] origin = point(0, 0, 0);
 
     protected Shape(int id) {
         this.id = id;
@@ -40,13 +41,9 @@ public abstract class Shape {
     }
 
     public float[] normalAt(float x, float y, float z) {
-        var objectNormal = Tuple.subtract(transform.inverse().multiply(point(x, y, z)), origin());
+        var objectNormal = Tuple.subtract(transform.inverse().multiply(point(x, y, z)), origin);
         var worldNormal = transform.submatrix(3, 3).inverse().transpose().multiply(objectNormal);
         return Vector.normalize(worldNormal);
-    }
-
-    public float[] origin() {
-        return point(0, 0, 0);
     }
 
     public void setTransform(Matrix newTransform) {

@@ -3,6 +3,8 @@ package org.raytracer.shapes;
 import java.util.List;
 
 import org.raytracer.Ray;
+import static org.raytracer.Tuple.subtract;
+import static org.raytracer.Tuple.dot;
 
 public class Sphere extends Shape {
 
@@ -10,8 +12,22 @@ public class Sphere extends Shape {
         super(id);
     }
 
-    public List<Ray.Intersection> intersect(Ray ray) {
-        return List.of();
+    public List<Ray.Intersection> intersect(Ray r) {
+        var transformedRay = r.transform(transform.inverse());
+        var sphereToRayVector = subtract(transformedRay.origin(), this.origin);
+        var a = dot(transformedRay.direction(), transformedRay.direction());
+        var b = 2f * dot(transformedRay.direction(), sphereToRayVector);
+        var c = dot(sphereToRayVector, sphereToRayVector) - 1f;
+
+        var discriminant = Math.pow(b, 2) - 4 * a * c;
+
+        if (discriminant < 0) {
+            return List.of();
+        } else {
+            return List.of(
+                    new Ray.Intersection((float) (-1 * b - Math.sqrt(discriminant)) / (2 * a), this),
+                    new Ray.Intersection((float) (-1 * b + Math.sqrt(discriminant)) / (2 * a), this));
+        }
     }
 
     public boolean equals(Object other) {

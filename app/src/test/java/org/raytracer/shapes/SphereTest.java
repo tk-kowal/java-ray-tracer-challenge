@@ -1,9 +1,11 @@
 package org.raytracer.shapes;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.raytracer.Vector.vector;
+import static org.raytracer.Point.point;
+import static org.raytracer.Ray.ray;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.raytracer.Matrix;
 import org.raytracer.Scalar;
@@ -90,6 +92,78 @@ public class SphereTest {
         assertTrue(Scalar.areEqual(sphereMaterial.specular(), defaultMaterial.specular()));
         assertTrue(Scalar.areEqual(sphereMaterial.shininess(), defaultMaterial.shininess()));
         assertTrue(Tuple.areEqual(sphereMaterial.color(), defaultMaterial.color()));
+    }
+
+    // Intersections
+
+    @Test
+    public void test_intersectScaledSphere() {
+        var ray = ray(point(0, 0, -5), vector(0, 0, 1));
+        var sphere = new Sphere(0);
+        sphere.setTransform(Transform.scale(2, 2, 2));
+        var xs = sphere.intersect(ray);
+        assertEquals(2, xs.size());
+        assertEquals(3f, xs.getFirst().t());
+        assertEquals(7f, xs.getLast().t());
+    }
+
+    @Test
+    public void test_intersectTranslatedSphere() {
+        var ray = ray(point(0, 0, -5), vector(0, 0, 1));
+        var sphere = new Sphere(0);
+        sphere.setTransform(Transform.translate(5, 0, 0));
+        var xs = sphere.intersect(ray);
+        assertEquals(0, xs.size());
+    }
+
+    @Test
+    public void test_rayIntersectsSphereAtTwoPoints() {
+        var ray = ray(point(0, 0, -5), vector(0, 0, 1));
+        var sphere = new Sphere(0);
+        var xs = sphere.intersect(ray);
+        assertEquals(2, xs.size());
+        assertEquals(4f, xs.getFirst().t());
+        assertEquals(6f, xs.getLast().t());
+        assertEquals(sphere.id(), xs.getFirst().object().id());
+        assertEquals(sphere.id(), xs.getLast().object().id());
+    }
+
+    @Test
+    public void test_raySphereTangent() {
+        var ray = ray(point(0, 1, -5), vector(0, 0, 1));
+        var sphere = new Sphere(0);
+        var xs = sphere.intersect(ray);
+        assertEquals(2, xs.size());
+        assertEquals(5f, xs.getFirst().t());
+        assertEquals(5f, xs.getLast().t());
+    }
+
+    @Test
+    public void test_raySphereMiss() {
+        var ray = ray(point(0, 2, -5), vector(0, 0, 1));
+        var sphere = new Sphere(0);
+        var xs = sphere.intersect(ray);
+        assertEquals(0, xs.size());
+    }
+
+    @Test
+    public void test_rayFromInsideSphereIntersectsInFrontAndBehind() {
+        var ray = ray(point(0, 0, 0), vector(0, 0, 1));
+        var sphere = new Sphere(0);
+        var xs = sphere.intersect(ray);
+        assertEquals(2, xs.size());
+        assertEquals(-1.0f, xs.getFirst().t());
+        assertEquals(1f, xs.getLast().t());
+    }
+
+    @Test
+    public void test_rayFromBeyondSphereIntersectsInBehind() {
+        var ray = ray(point(0, 0, 5), vector(0, 0, 1));
+        var sphere = new Sphere(0);
+        var xs = sphere.intersect(ray);
+        assertEquals(2, xs.size());
+        assertEquals(-6.0f, xs.getFirst().t());
+        assertEquals(-4.0f, xs.getLast().t());
     }
 
 }
