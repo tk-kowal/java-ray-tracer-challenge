@@ -52,7 +52,7 @@ public class Scene7RenderTest {
         left.setTransform(Transform.translate(-1.5f, 0.33f, -0.75f).scale(0.33f, 0.33f, 0.33f));
         left.setMaterial(new Material().setColor(color(1, 0.8f, 0.1f)).setDiffuse(.7f).setSpecular(.3f));
 
-        var light = new PointLight(point(-100, 100, -100), color(1, .8f, .5f));
+        var light = new PointLight(point(-10, 10, -10), color(1, .8f, .5f));
         var camera = new Camera(200, 100, (float) (Math.PI / 3));
         camera.setTransform(View.transform(point(0, 1.5f, -10), point(0, 1, 0), vector(0, 1, 0)));
 

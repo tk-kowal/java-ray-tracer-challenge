@@ -41,10 +41,13 @@ public abstract class Shape {
     }
 
     public float[] normalAt(float x, float y, float z) {
-        var objectNormal = Tuple.subtract(transform.inverse().multiply(point(x, y, z)), origin);
-        var worldNormal = transform.submatrix(3, 3).inverse().transpose().multiply(objectNormal);
+        var localPoint = transform.inverse().multiply(point(x, y, z));
+        var localNormal = localNormalAt(localPoint);
+        var worldNormal = transform.submatrix(3, 3).inverse().transpose().multiply(localNormal);
         return Vector.normalize(worldNormal);
     }
+
+    public abstract float[] localNormalAt(float[] point);
 
     public void setTransform(Matrix newTransform) {
         this.transform = newTransform;

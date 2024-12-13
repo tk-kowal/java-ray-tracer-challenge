@@ -3,6 +3,8 @@ package org.raytracer.shapes;
 import java.util.List;
 
 import org.raytracer.Ray;
+import org.raytracer.Tuple;
+
 import static org.raytracer.Tuple.subtract;
 import static org.raytracer.Tuple.dot;
 
@@ -10,6 +12,15 @@ public class Sphere extends Shape {
 
     public Sphere(int id) {
         super(id);
+    }
+
+    public boolean equals(Object other) {
+        if (other instanceof Sphere) {
+            var otherSphere = (Sphere) other;
+            return transform.equals(otherSphere.transform) && material.equals(otherSphere.material);
+        } else {
+            return false;
+        }
     }
 
     public List<Ray.Intersection> intersect(Ray r) {
@@ -30,13 +41,8 @@ public class Sphere extends Shape {
         }
     }
 
-    public boolean equals(Object other) {
-        if (other instanceof Sphere) {
-            var otherSphere = (Sphere) other;
-            return transform.equals(otherSphere.transform) && material.equals(otherSphere.material);
-        } else {
-            return false;
-        }
+    public float[] localNormalAt(float[] point) {
+        return Tuple.subtract(point, origin);
     }
 
 }
