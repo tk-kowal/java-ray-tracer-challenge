@@ -28,12 +28,12 @@ public class World {
 
     public static World defaultWorld() {
         var light = new PointLight(point(-10, 10, -10), color(1, 1, 1));
-        var s1 = new Sphere(0);
+        var s1 = new Sphere();
         s1.setMaterial(new Material()
                 .setColor(color(0.8f, 1.0f, 0.6f))
                 .setDiffuse(0.7f)
                 .setSpecular(0.2f));
-        var s2 = new Sphere(1);
+        var s2 = new Sphere();
         s2.setTransform(Transform.scale(.5f, .5f, .5f));
         return new World(List.of(s1, s2), List.of(light));
     }

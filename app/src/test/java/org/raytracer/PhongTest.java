@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.raytracer.lights.PointLight;
 import org.raytracer.shapes.Sphere;
 
-import static org.raytracer.Point.isPoint;
 import static org.raytracer.Point.point;
 import static org.raytracer.Vector.vector;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -80,7 +79,7 @@ public class PhongTest {
     @Test
     public void test_prepare() {
         var r = ray(point(0, 0, -5), vector(0, 0, 1));
-        var s = new Sphere(0);
+        var s = new Sphere();
         var i = new Ray.Intersection(4, s);
         var result = Phong.prepare(i, r);
         assertEquals(i.t(), result.t());
@@ -93,7 +92,7 @@ public class PhongTest {
     @Test
     public void test_prepareHitInsideShape() {
         var r = ray(point(0, 0, 0), vector(0, 0, 1));
-        var s = new Sphere(0);
+        var s = new Sphere();
         var i = new Ray.Intersection(1, s);
         var result = Phong.prepare(i, r);
         assertTrue(result.isInside());

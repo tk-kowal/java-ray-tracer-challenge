@@ -15,7 +15,7 @@ public class Phong {
 
     public static float[] colorAt(World w, Ray r) {
         var xs = Ray.intersect(w, r);
-        if (xs.isEmpty()) {
+        if (xs.isEmpty() || Ray.hit(xs) == null) {
             return color(0, 0, 0);
         }
         var params = prepare(Ray.hit(xs), r);

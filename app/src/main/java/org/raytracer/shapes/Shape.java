@@ -7,23 +7,16 @@ import java.util.List;
 import org.raytracer.Material;
 import org.raytracer.Matrix;
 import org.raytracer.Ray;
-import org.raytracer.Tuple;
 import org.raytracer.Vector;
 
 public abstract class Shape {
-    protected final int id;
     protected Matrix transform;
     protected Material material;
     protected float[] origin = point(0, 0, 0);
 
-    protected Shape(int id) {
-        this.id = id;
+    protected Shape() {
         this.transform = Matrix.identity();
         this.material = new Material();
-    }
-
-    public int id() {
-        return id;
     }
 
     public abstract List<Ray.Intersection> intersect(Ray ray);

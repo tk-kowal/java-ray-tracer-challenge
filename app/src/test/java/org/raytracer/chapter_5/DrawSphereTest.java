@@ -28,7 +28,7 @@ public class DrawSphereTest {
     public void test_drawSphere() {
         var canvasSideLength = 100;
         var canvas = new Canvas(canvasSideLength, canvasSideLength);
-        var sphere = new Sphere(0);
+        var sphere = new Sphere();
         sphere.material().setColor(color(0f, 0.2f, 1f));
         sphere.material().setShininess(50f);
         sphere.setTransform(Transform.scale(10, 0.1f, 10).translate(0, 0, 0));

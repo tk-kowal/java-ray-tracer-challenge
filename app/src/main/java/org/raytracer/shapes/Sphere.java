@@ -10,8 +10,8 @@ import static org.raytracer.Tuple.dot;
 
 public class Sphere extends Shape {
 
-    public Sphere(int id) {
-        super(id);
+    public Sphere() {
+        super();
     }
 
     public boolean equals(Object other) {

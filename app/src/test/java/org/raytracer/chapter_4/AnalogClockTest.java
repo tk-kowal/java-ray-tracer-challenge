@@ -1,6 +1,5 @@
 package org.raytracer.chapter_4;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.raytracer.Canvas;
 import org.raytracer.PpmExporter;

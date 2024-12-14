@@ -35,15 +35,15 @@ public class RayTest {
 
     @Test
     public void test_intersectionIncludesTimeAndObject() {
-        var shape = new Sphere(0);
+        var shape = new Sphere();
         var intersection = new Ray.Intersection(3.5f, shape);
         assertEquals(3.5, intersection.t());
-        assertEquals(shape.id(), intersection.object().id());
+        assertEquals(shape, intersection.object());
     }
 
     @Test
     public void test_hitReturnsFirstHit() {
-        var shape = new Sphere(0);
+        var shape = new Sphere();
         var x1 = new Ray.Intersection(1, shape);
         var x2 = new Ray.Intersection(2, shape);
         var xs = new Ray.Intersection[] { x1, x2 };
@@ -52,7 +52,7 @@ public class RayTest {
 
     @Test
     public void test_hitReturnsFirstNonNegativeHit() {
-        var shape = new Sphere(0);
+        var shape = new Sphere();
         var x1 = new Ray.Intersection(-1, shape);
         var x2 = new Ray.Intersection(1, shape);
         var xs = new Ray.Intersection[] { x1, x2 };
@@ -61,7 +61,7 @@ public class RayTest {
 
     @Test
     public void test_hitReturnsNullIfNoHits() {
-        var shape = new Sphere(0);
+        var shape = new Sphere();
         var x1 = new Ray.Intersection(-1, shape);
         var x2 = new Ray.Intersection(-2, shape);
         var xs = new Ray.Intersection[] { x1, x2 };
@@ -70,7 +70,7 @@ public class RayTest {
 
     @Test
     public void test_hitSortsIntersections() {
-        var shape = new Sphere(0);
+        var shape = new Sphere();
         var x1 = new Ray.Intersection(5, shape);
         var x2 = new Ray.Intersection(7, shape);
         var x3 = new Ray.Intersection(-3, shape);
