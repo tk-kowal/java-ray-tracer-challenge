@@ -37,7 +37,7 @@ public class Phong {
 
     public static float[] lighting(Material m, Light l, float[] point, float[] eyev, float[] normalv,
             boolean isInShadow) {
-        var effectiveColor = Tuple.multiply(m.color(), l.intensity());
+        var effectiveColor = Tuple.multiply(m.colorAt(point), l.intensity());
         var lightv = normalize(Tuple.subtract(l.position(), point));
         var ambient = Tuple.multiply(effectiveColor, m.ambient());
         var diffuse = color(0, 0, 0);

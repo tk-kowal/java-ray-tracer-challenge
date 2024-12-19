@@ -1,9 +1,13 @@
 package org.raytracer;
 
+import org.raytracer.patterns.IPattern;
+
 public class Material {
 
     private float ambient, diffuse, specular, shininess;
     private float[] color;
+
+    private IPattern pattern;
 
     public Material() {
         this.color = Color.color(1f, 1f, 1f);
@@ -11,6 +15,7 @@ public class Material {
         this.diffuse = 0.9f;
         this.specular = 0.9f;
         this.shininess = 200.0f;
+        this.pattern = null;
     }
 
     public float ambient() {
@@ -31,6 +36,18 @@ public class Material {
 
     public float[] color() {
         return this.color;
+    }
+
+    public float[] colorAt(float[] point) {
+        if (pattern == null) {
+            return this.color;
+        } else {
+            return pattern.colorAt(point);
+        }
+    }
+
+    public IPattern pattern() {
+        return pattern;
     }
 
     public Material setColor(float[] color) {
@@ -58,6 +75,11 @@ public class Material {
         return this;
     }
 
+    public Material setPattern(IPattern p) {
+        this.pattern = p;
+        return this;
+    }
+
     public boolean equals(Object other) {
         if (other instanceof Material) {
             var otherMaterial = (Material) other;
@@ -65,7 +87,8 @@ public class Material {
                     && Scalar.areEqual(specular, otherMaterial.specular)
                     && Scalar.areEqual(diffuse, otherMaterial.diffuse)
                     && Scalar.areEqual(ambient, otherMaterial.ambient)
-                    && Scalar.areEqual(shininess, otherMaterial.shininess);
+                    && Scalar.areEqual(shininess, otherMaterial.shininess)
+                    && pattern == otherMaterial.pattern();
         } else {
             return false;
         }

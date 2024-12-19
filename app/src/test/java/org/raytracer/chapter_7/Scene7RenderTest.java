@@ -1,13 +1,16 @@
 package org.raytracer.chapter_7;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.raytracer.Camera;
+import org.raytracer.Color;
 import org.raytracer.Material;
 import org.raytracer.PpmExporter;
 import org.raytracer.Transform;
 import org.raytracer.View;
 import org.raytracer.World;
 import org.raytracer.lights.PointLight;
+import org.raytracer.patterns.StripePattern;
 import org.raytracer.shapes.Plane;
 import org.raytracer.shapes.Sphere;
 
@@ -17,6 +20,7 @@ import static org.raytracer.Vector.vector;
 
 import java.util.List;
 
+//@Disabled
 public class Scene7RenderTest {
 
     @Test
@@ -27,7 +31,8 @@ public class Scene7RenderTest {
         // .9f)).setSpecular(0));
 
         var floor = new Plane();
-        floor.setMaterial(new Material().setColor(color(1, .9f, .9f)).setSpecular(0));
+        floor.setMaterial(new Material().setColor(color(1, .9f, .9f)).setSpecular(0)
+                .setPattern(new StripePattern(Color.WHITE, Color.BLUE)));
 
         var wall = new Plane();
         wall.setMaterial(new Material().setColor(color(0.4f, .6f, 1f)).setSpecular(0));
@@ -62,7 +67,7 @@ public class Scene7RenderTest {
         left.setMaterial(new Material().setColor(color(1, 0.8f, 0.1f)).setDiffuse(.7f).setSpecular(.3f));
 
         var light = new PointLight(point(-10, 10, -10), color(1, .8f, .5f));
-        var camera = new Camera(960, 720, (float) (Math.PI / 3));
+        var camera = new Camera(200, 100, (float) (Math.PI / 3));
         camera.setTransform(View.transform(point(0, 1.5f, -10), point(0, 1, 0), vector(0, 1, 0)));
 
         var world = new World(List.of(floor, wall, left, middle, right), List.of(light));
