@@ -4,6 +4,12 @@ import static org.raytracer.Point.point;
 import static org.raytracer.Ray.ray;
 import static org.raytracer.Vector.normalize;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 public class Camera {
 
     // horizontal & vertical size in pixels
@@ -14,6 +20,7 @@ public class Camera {
     private float aspect;
     private float pixelSize;
     private Matrix transform;
+    private final int THREAD_COUNT = 10;
 
     public Camera(float hsize, float vsize, float fov) {
         this.hsize = hsize;
@@ -56,11 +63,38 @@ public class Camera {
     }
 
     public Canvas render(World w) {
+        int columnsPerThread = (int) hsize / THREAD_COUNT;
+        var es = Executors.newFixedThreadPool(THREAD_COUNT);
+        List<Future<List<PixelData>>> results = new ArrayList<>();
         var c = new Canvas((int) hsize, (int) vsize);
-        for (var y = 0; y < vsize; y++) {
-            for (var x = 0; x < hsize; x++) {
-                var r = rayForPixel(x, y);
-                c.writePixel(x, y, Phong.colorAt(w, r));
+
+        for (int i = 0; i < hsize; i += columnsPerThread) {
+            int start = i;
+            int end = i + columnsPerThread;
+            System.out.println(
+                    "Starting render thread for columns: " + String.valueOf(start) + " through "
+                            + String.valueOf(end - 1));
+            results.add(es.submit(() -> {
+                var data = new ArrayList<PixelData>();
+                for (var y = 0; y < vsize; y++) {
+                    for (var x = start; x < end; x++) {
+                        var r = rayForPixel(x, y);
+                        data.add(new PixelData(x, y, Phong.colorAt(w, r)));
+                    }
+                }
+                return data;
+            }));
+        }
+        for (var r : results) {
+            try {
+                var data = r.get();
+                for (var p : data) {
+                    c.writePixel(p.x, p.y, p.color);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
             }
         }
         return c;
@@ -87,5 +121,8 @@ public class Camera {
         this.halfWidth = aspect >= 1 ? half_view : half_view * aspect;
         this.halfHeight = aspect >= 1 ? half_view / aspect : half_view;
         this.pixelSize = (halfWidth * 2) / hsize;
+    }
+
+    private record PixelData(int x, int y, float[] color) {
     }
 }

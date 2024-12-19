@@ -18,6 +18,8 @@ import static org.raytracer.Color.color;
 import static org.raytracer.Point.point;
 import static org.raytracer.Vector.vector;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 //@Disabled
@@ -76,9 +78,16 @@ public class Scene7RenderTest {
 
         var world = new World(List.of(floor, wall, left, middle, right), List.of(light));
 
+        var renderStart = Instant.now();
         var img = camera.render(world);
+        var renderEnd = Instant.now();
 
+        var exportStart = Instant.now();
         PpmExporter.export(img, "/tmp/scene7.ppm");
+        var exportEnd = Instant.now();
+
+        System.out.println("render: " + Duration.between(renderStart, renderEnd).toMillis());
+        System.out.println("export: " + Duration.between(exportStart, exportEnd).toMillis());
     }
 
 }
