@@ -19,6 +19,11 @@ public abstract class Shape {
         this.material = new Material();
     }
 
+    public float[] colorAt(float[] point) {
+        var localPoint = transform.inverse().multiply(point);
+        return material.colorAt(localPoint);
+    }
+
     public abstract List<Ray.Intersection> intersect(Ray ray);
 
     public Material material() {

@@ -54,9 +54,13 @@ public class Scene7RenderTest {
         // .scale(10, 0.5f, 10));
         // rightWall.setMaterial(floor.material());
 
+        var middlePattern = new StripePattern(Color.RED, Color.GREEN);
+        middlePattern.setTransform(Transform.rotateY((float) Math.PI / 4).scale(0.1f, 1, 1));
+
         var middle = new Sphere();
         middle.setTransform(Transform.translate(-0.5f, 1, 0.5f));
-        middle.setMaterial(new Material().setColor(color(0.1f, 1, 0.5f)).setDiffuse(.7f).setSpecular(.3f));
+        middle.setMaterial(new Material().setColor(color(0.1f, 1, 0.5f)).setDiffuse(.7f).setSpecular(.3f)
+                .setPattern(middlePattern));
 
         var right = new Sphere();
         right.setTransform(Transform.translate(1.5f, 0.5f, -0.5f).scale(0.5f, 0.5f, 0.5f));
@@ -67,7 +71,7 @@ public class Scene7RenderTest {
         left.setMaterial(new Material().setColor(color(1, 0.8f, 0.1f)).setDiffuse(.7f).setSpecular(.3f));
 
         var light = new PointLight(point(-10, 10, -10), color(1, .8f, .5f));
-        var camera = new Camera(200, 100, (float) (Math.PI / 3));
+        var camera = new Camera(960, 720, (float) (Math.PI / 3));
         camera.setTransform(View.transform(point(0, 1.5f, -10), point(0, 1, 0), vector(0, 1, 0)));
 
         var world = new World(List.of(floor, wall, left, middle, right), List.of(light));

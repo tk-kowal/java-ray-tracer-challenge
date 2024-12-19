@@ -1,10 +1,13 @@
 package org.raytracer.patterns;
 
-public class StripePattern implements IPattern {
+import org.raytracer.Matrix;
+
+public class StripePattern extends Pattern {
 
     float[] colorA, colorB;
 
     public StripePattern(float[] a, float[] b) {
+        super();
         colorA = a;
         colorB = b;
     }
@@ -18,7 +21,7 @@ public class StripePattern implements IPattern {
     }
 
     public float[] colorAt(float[] point) {
-        return Math.floor(point[0]) % 2 == 0 ? colorA : colorB;
+        var localPoint = transform.inverse().multiply(point);
+        return Math.floor(localPoint[0]) % 2 == 0 ? colorA : colorB;
     }
-
 }

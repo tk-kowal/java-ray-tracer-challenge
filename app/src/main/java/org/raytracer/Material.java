@@ -1,13 +1,13 @@
 package org.raytracer;
 
-import org.raytracer.patterns.IPattern;
+import org.raytracer.patterns.Pattern;
 
 public class Material {
 
     private float ambient, diffuse, specular, shininess;
     private float[] color;
 
-    private IPattern pattern;
+    private Pattern pattern;
 
     public Material() {
         this.color = Color.color(1f, 1f, 1f);
@@ -46,7 +46,7 @@ public class Material {
         }
     }
 
-    public IPattern pattern() {
+    public Pattern pattern() {
         return pattern;
     }
 
@@ -75,7 +75,7 @@ public class Material {
         return this;
     }
 
-    public Material setPattern(IPattern p) {
+    public Material setPattern(Pattern p) {
         this.pattern = p;
         return this;
     }
