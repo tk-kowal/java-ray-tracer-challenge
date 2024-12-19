@@ -10,6 +10,7 @@ import org.raytracer.Transform;
 import org.raytracer.View;
 import org.raytracer.World;
 import org.raytracer.lights.PointLight;
+import org.raytracer.patterns.Gradient;
 import org.raytracer.patterns.StripePattern;
 import org.raytracer.shapes.Plane;
 import org.raytracer.shapes.Sphere;
@@ -36,8 +37,10 @@ public class Scene7RenderTest {
         floor.setMaterial(new Material().setColor(color(1, .9f, .9f)).setSpecular(0)
                 .setPattern(new StripePattern(Color.WHITE, Color.BLUE)));
 
+        var wallPattern = new Gradient(Color.WHITE, Color.BLUE);
+        wallPattern.setTransform(Transform.rotateZ((float) Math.PI / 2).scale(100, 1, 1));
         var wall = new Plane();
-        wall.setMaterial(new Material().setColor(color(0.4f, .6f, 1f)).setSpecular(0));
+        wall.setMaterial(new Material().setSpecular(0).setPattern(wallPattern));
         wall.setTransform(Transform.rotateX((float) (-1f * Math.PI / 2)).translate(0, -100, 200));
 
         // var leftWall = new Sphere();
