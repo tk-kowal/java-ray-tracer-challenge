@@ -11,6 +11,7 @@ public class Color extends Tuple {
     public static float[] BLUE = color(0, 0, 1);
     public static float[] WHITE = color(1, 1, 1);
     public static float[] BLACK = color(0, 0, 0);
+    public static float[] GREY = color(.5f, .5f, .5f);
 
     public static float[] color(float... components) {
         return components;

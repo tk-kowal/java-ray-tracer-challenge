@@ -59,7 +59,7 @@ public class DrawSphereTest {
                     var point = ray.position(hit.t());
                     var normal = sphere.normalAt(point[0], point[1], point[2]);
                     var eye = Tuple.multiply(ray.direction(), -1f);
-                    canvas.writePixel(x, y, Phong.lighting(sphere.material(), light, point, eye, normal));
+                    canvas.writePixel(x, y, Phong.lighting(sphere, light, point, eye, normal));
                 }
             }
         }

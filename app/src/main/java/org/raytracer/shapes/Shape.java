@@ -30,6 +30,22 @@ public abstract class Shape {
         return this.material;
     }
 
+    public float shininess() {
+        return material.shininess();
+    }
+
+    public float diffuse() {
+        return material.diffuse();
+    }
+
+    public float ambient() {
+        return material.ambient();
+    }
+
+    public float specular() {
+        return material.specular();
+    }
+
     public void setMaterial(Material m) {
         this.material = m;
     }

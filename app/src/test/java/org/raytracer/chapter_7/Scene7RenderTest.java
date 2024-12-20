@@ -10,7 +10,9 @@ import org.raytracer.Transform;
 import org.raytracer.View;
 import org.raytracer.World;
 import org.raytracer.lights.PointLight;
+import org.raytracer.patterns.CheckerPattern;
 import org.raytracer.patterns.Gradient;
+import org.raytracer.patterns.RingPattern;
 import org.raytracer.patterns.StripePattern;
 import org.raytracer.shapes.Plane;
 import org.raytracer.shapes.Sphere;
@@ -28,39 +30,20 @@ public class Scene7RenderTest {
 
     @Test
     public void testScene7Render() {
-        // var floor = new Sphere();
-        // floor.setTransform(Transform.scale(10, 0.01f, 10));
-        // floor.setMaterial(new Material().setColor(color(1, .9f,
-        // .9f)).setSpecular(0));
-
         var floor = new Plane();
-        floor.setMaterial(new Material().setColor(color(1, .9f, .9f)).setSpecular(0)
-                .setPattern(new StripePattern(Color.WHITE, Color.BLUE)));
+        floor.setMaterial(
+                new Material().setColor(color(1, .9f, .9f)).setPattern(new CheckerPattern(Color.GREY, Color.BLACK)));
 
-        var wallPattern = new Gradient(Color.WHITE, Color.BLUE);
-        wallPattern.setTransform(Transform.rotateZ((float) Math.PI / 2).scale(100, 1, 1));
+        var wallPattern = new RingPattern(Color.GREY, Color.BLACK);
+        wallPattern.setTransform(Transform.scale(5, 5, 5));
         var wall = new Plane();
         wall.setMaterial(new Material().setSpecular(0).setPattern(wallPattern));
-        wall.setTransform(Transform.rotateX((float) (-1f * Math.PI / 2)).translate(0, -100, 200));
+        wall.setTransform(Transform.rotateX((float) (-1f * Math.PI / 2)).translate(0, -100, 0));
 
-        // var leftWall = new Sphere();
-        // leftWall.setTransform(Transform
-        // .translate(0, 0, 5)
-        // .rotateY((float) (-1 * Math.PI / 4))
-        // .rotateX((float) Math.PI / 2)
-        // .scale(10, 0.5f, 10));
-        // leftWall.setMaterial(floor.material());
-
-        // var rightWall = new Sphere();
-        // rightWall.setTransform(Transform
-        // .translate(0, 0, 5)
-        // .rotateY((float) (Math.PI / 4))
-        // .rotateX((float) Math.PI / 2)
-        // .scale(10, 0.5f, 10));
-        // rightWall.setMaterial(floor.material());
-
-        var middlePattern = new StripePattern(Color.RED, Color.GREEN);
-        middlePattern.setTransform(Transform.rotateY((float) Math.PI / 4).scale(0.1f, 1, 1));
+        var middlePattern = new StripePattern(Color.WHITE, Color.RED);
+        middlePattern
+                .setTransform(
+                        Transform.rotateY((float) Math.PI / 4).rotateZ((float) Math.PI / 4).scale(0.15f, 1f, .15f));
 
         var middle = new Sphere();
         middle.setTransform(Transform.translate(-0.5f, 1, 0.5f));
@@ -69,14 +52,14 @@ public class Scene7RenderTest {
 
         var right = new Sphere();
         right.setTransform(Transform.translate(1.5f, 0.5f, -0.5f).scale(0.5f, 0.5f, 0.5f));
-        right.setMaterial(new Material().setColor(color(0.5f, 1f, 0.1f)).setDiffuse(.7f).setSpecular(.3f));
+        right.setMaterial(new Material().setColor(Color.WHITE).setDiffuse(.7f).setSpecular(.3f));
 
         var left = new Sphere();
         left.setTransform(Transform.translate(-1.5f, 0.33f, -0.75f).scale(0.33f, 0.33f, 0.33f));
-        left.setMaterial(new Material().setColor(color(1, 0.8f, 0.1f)).setDiffuse(.7f).setSpecular(.3f));
+        left.setMaterial(new Material().setColor(Color.WHITE).setDiffuse(.7f).setSpecular(.3f));
 
-        var light = new PointLight(point(-10, 10, -10), color(1, .8f, .5f));
-        var camera = new Camera(960, 720, (float) (Math.PI / 3));
+        var light = new PointLight(point(-10, 10, -10), color(1, 1, 1));
+        var camera = new Camera(960, 100, (float) (Math.PI / 3));
         camera.setTransform(View.transform(point(0, 1.5f, -10), point(0, 1, 0), vector(0, 1, 0)));
 
         var world = new World(List.of(floor, wall, left, middle, right), List.of(light));

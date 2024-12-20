@@ -31,27 +31,27 @@ public class Phong {
         return hit != null && hit.t() < distance;
     }
 
-    public static float[] lighting(Material m, Light l, float[] point, float[] eyev, float[] normalv) {
-        return lighting(m, l, point, eyev, normalv, false);
+    public static float[] lighting(Shape s, Light l, float[] point, float[] eyev, float[] normalv) {
+        return lighting(s, l, point, eyev, normalv, false);
     }
 
-    public static float[] lighting(Material m, Light l, float[] point, float[] eyev, float[] normalv,
+    public static float[] lighting(Shape s, Light l, float[] point, float[] eyev, float[] normalv,
             boolean isInShadow) {
-        var effectiveColor = Tuple.multiply(m.colorAt(point), l.intensity());
+        var effectiveColor = Tuple.multiply(s.colorAt(point), l.intensity());
         var lightv = normalize(Tuple.subtract(l.position(), point));
-        var ambient = Tuple.multiply(effectiveColor, m.ambient());
+        var ambient = Tuple.multiply(effectiveColor, s.ambient());
         var diffuse = color(0, 0, 0);
         var specular = color(0, 0, 0);
         var lightDotNormal = dot(lightv, normalv);
 
         if (!isInShadow && lightDotNormal >= 0) {
-            diffuse = Tuple.multiply(Tuple.multiply(effectiveColor, m.diffuse()), lightDotNormal);
+            diffuse = Tuple.multiply(Tuple.multiply(effectiveColor, s.diffuse()), lightDotNormal);
             var reflectv = reflect(multiply(lightv, -1f), normalv);
             var reflectDotEye = dot(reflectv, eyev);
 
             if (reflectDotEye > 0) {
-                var factor = (float) Math.pow(reflectDotEye, m.shininess());
-                specular = multiply(multiply(l.intensity(), m.specular()), factor);
+                var factor = (float) Math.pow(reflectDotEye, s.shininess());
+                specular = multiply(multiply(l.intensity(), s.specular()), factor);
             }
         }
 
@@ -61,7 +61,7 @@ public class Phong {
     public static float[] shadeHit(World w, PhongParams p) {
         var shadowed = isShadowed(w, p.overpoint());
         return lighting(
-                p.s().material(),
+                p.s(),
                 w.lights().getFirst(),
                 p.overpoint(),
                 p.eyev(),
