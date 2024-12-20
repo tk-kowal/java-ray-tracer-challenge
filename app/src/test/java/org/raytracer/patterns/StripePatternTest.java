@@ -13,13 +13,6 @@ import org.raytracer.shapes.Sphere;
 public class StripePatternTest {
 
     @Test
-    public void test_stripePattern() {
-        var pattern = new StripePattern(Color.WHITE, Color.BLACK);
-        assertTrue(Tuple.areEqual(Color.WHITE, pattern.a()));
-        assertTrue(Tuple.areEqual(Color.BLACK, pattern.b()));
-    }
-
-    @Test
     public void test_patternConstantInY() {
         var pattern = new StripePattern(Color.WHITE, Color.BLACK);
         assertTrue(Tuple.areEqual(Color.WHITE, pattern.colorAt(point(0, 0, 0))));

@@ -1,27 +1,20 @@
 package org.raytracer.patterns;
 
-import org.raytracer.Matrix;
-
 public class StripePattern extends Pattern {
 
-    float[] colorA, colorB;
+    Pattern a, b;
 
     public StripePattern(float[] a, float[] b) {
-        super();
-        colorA = a;
-        colorB = b;
+        this(new SolidPattern(a), new SolidPattern(b));
     }
 
-    public float[] a() {
-        return this.colorA;
-    }
-
-    public float[] b() {
-        return this.colorB;
+    public StripePattern(Pattern a, Pattern b) {
+        this.a = a;
+        this.b = b;
     }
 
     public float[] colorAt(float[] point) {
-        var localPoint = transform.inverse().multiply(point);
-        return Math.floor(localPoint[0]) % 2 == 0 ? colorA : colorB;
+        var lp = transform.inverse().multiply(point);
+        return Math.floor(lp[0]) % 2 == 0 ? a.colorAt(lp) : b.colorAt(lp);
     }
 }

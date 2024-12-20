@@ -7,7 +7,6 @@ public class Gradient extends Pattern {
     private float[] a, b;
 
     public Gradient(float[] colorA, float[] colorB) {
-        super();
         this.a = colorA;
         this.b = colorB;
     }
