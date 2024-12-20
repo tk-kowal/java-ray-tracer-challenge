@@ -9,9 +9,13 @@ import org.raytracer.Transform;
 import org.raytracer.View;
 import org.raytracer.World;
 import org.raytracer.lights.PointLight;
+import org.raytracer.patterns.BlendedPattern;
+import org.raytracer.patterns.Gradient;
 import org.raytracer.patterns.Patterns;
+import org.raytracer.patterns.Perlin;
 import org.raytracer.patterns.RingPattern;
 import org.raytracer.patterns.StripePattern;
+import org.raytracer.patterns.Targets;
 import org.raytracer.shapes.Plane;
 import org.raytracer.shapes.Sphere;
 
@@ -26,18 +30,21 @@ import java.util.List;
 //@Disabled
 public class Scene7RenderTest {
 
-        private static boolean HIGH_RES = false;
+        private static boolean HIGH_RES = true;
 
         @Test
         public void testScene7Render() {
+
+                var targets = new Targets(Color.GREY, Color.WHITE, Color.BLACK);
+                targets.setTransform(Transform.scale(.5f, .5f, .5f));
+
                 var floor = new Plane();
                 floor.setMaterial(
-                                new Material().setColor(color(1, .9f, .9f))
-                                                .setPattern(Patterns.ringsInCheckers(Color.WHITE, Color.BLACK,
-                                                                Color.BLACK)));
+                                new Material().setColor(color(1, .9f, .9f)).setPattern(targets));
 
-                var wallPattern = new RingPattern(Color.GREY, Color.BLACK);
-                wallPattern.setTransform(Transform.scale(5, 5, 5));
+                var wallPattern = new Gradient(Color.WHITE, Color.BLACK);
+                wallPattern.setTransform(Transform.rotateY((float) (-1 * Math.PI / 2)).scale(100, 1, 1));
+
                 var wall = new Plane();
                 wall.setMaterial(new Material().setSpecular(0).setPattern(wallPattern));
                 wall.setTransform(Transform.rotateX((float) (-1f * Math.PI / 2)).translate(0, -100, 0));
@@ -46,12 +53,14 @@ public class Scene7RenderTest {
                 middlePattern
                                 .setTransform(
                                                 Transform.rotateY((float) Math.PI / 4).rotateZ((float) Math.PI / 4)
-                                                                .scale(0.15f, 1f, .15f));
+                                                                .scale(0.05f, 0.05f, .05f));
+
+                var perlinPattern = new Perlin(middlePattern);
 
                 var middle = new Sphere();
                 middle.setTransform(Transform.translate(-0.5f, 1, 0.5f));
                 middle.setMaterial(new Material().setColor(color(0.1f, 1, 0.5f)).setDiffuse(.7f).setSpecular(.3f)
-                                .setPattern(middlePattern));
+                                .setPattern(perlinPattern));
 
                 var right = new Sphere();
                 right.setTransform(Transform.translate(1.5f, 0.5f, -0.5f).scale(0.5f, 0.5f, 0.5f));
@@ -71,7 +80,7 @@ public class Scene7RenderTest {
                         camera = new Camera(200, 100, (float) (Math.PI / 3));
                 }
 
-                camera.setTransform(View.transform(point(0, 10.5f, -10), point(0, 1, 0), vector(0, 1, 0)));
+                camera.setTransform(View.transform(point(0, 1.5f, -10), point(0, 1, 0), vector(0, 1, 0)));
 
                 var world = new World(List.of(floor, wall, left, middle, right), List.of(light));
 
