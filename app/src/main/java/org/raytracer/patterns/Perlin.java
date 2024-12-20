@@ -1,6 +1,6 @@
 package org.raytracer.patterns;
 
-import org.raytracer.Tuple;
+import static org.raytracer.Point.point;
 
 public class Perlin extends Pattern {
 
@@ -13,22 +13,33 @@ public class Perlin extends Pattern {
         @Override
         public float[] colorAt(float[] point) {
                 var lp = transform.inverse().multiply(point);
-                var nlp = (float) noise(lp[0], lp[1], lp[2]);
-                return a.colorAt(Tuple.multiply(lp, nlp));
+                var noiseX = (float) noise(lp[0] + 10.0, lp[1], lp[2]);
+                var noiseY = (float) noise(lp[0], lp[1] + 15.0, lp[2]);
+                var noiseZ = (float) noise(lp[0], lp[1], lp[2] + 20.0);
+                var alpha = 0.01f;
+                var newX = lp[0] * noiseX * alpha;
+                var newY = lp[1] * noiseY * alpha;
+                var newZ = lp[2] * noiseZ * alpha;
+                var np = point(newX, newY, newZ);
+                return a.colorAt(np);
         }
 
         static public double noise(double x, double y, double z) {
-                int X = (int) Math.floor(x) & 255, // FIND UNIT CUBE THAT
-                                Y = (int) Math.floor(y) & 255, // CONTAINS POINT.
-                                Z = (int) Math.floor(z) & 255;
-                x -= Math.floor(x); // FIND RELATIVE X,Y,Z
-                y -= Math.floor(y); // OF POINT IN CUBE.
+                int X = (int) Math.floor(x) & 255;
+                int Y = (int) Math.floor(y) & 255;
+                int Z = (int) Math.floor(z) & 255;
+                x -= Math.floor(x);
+                y -= Math.floor(y);
                 z -= Math.floor(z);
-                double u = fade(x), // COMPUTE FADE CURVES
-                                v = fade(y), // FOR EACH OF X,Y,Z.
-                                w = fade(z);
-                int A = p[X] + Y, AA = p[A] + Z, AB = p[A + 1] + Z, // HASH COORDINATES OF
-                                B = p[X + 1] + Y, BA = p[B] + Z, BB = p[B + 1] + Z; // THE 8 CUBE CORNERS,
+                double u = fade(x);
+                double v = fade(y);
+                double w = fade(z);
+                int A = p[X] + Y;
+                int AA = p[A] + Z;
+                int AB = p[A + 1] + Z;
+                int B = p[X + 1] + Y;
+                int BA = p[B] + Z;
+                int BB = p[B + 1] + Z;
 
                 return lerp(w, lerp(v, lerp(u, grad(p[AA], x, y, z), // AND ADD
                                 grad(p[BA], x - 1, y, z)), // BLENDED
@@ -41,7 +52,9 @@ public class Perlin extends Pattern {
         }
 
         static double fade(double t) {
-                return t * t * t * (t * (t * 6 - 15) + 10);
+                // 6t^5 - 15t^4 + 10t^3
+                // return t * t * t * (t * (t * 6 - 15) + 10);
+                return t;
         }
 
         static double lerp(double t, double a, double b) {

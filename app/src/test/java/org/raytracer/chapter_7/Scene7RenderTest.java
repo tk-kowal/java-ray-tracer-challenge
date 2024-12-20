@@ -30,7 +30,7 @@ import java.util.List;
 //@Disabled
 public class Scene7RenderTest {
 
-        private static boolean HIGH_RES = true;
+        private static boolean HIGH_RES = false;
 
         @Test
         public void testScene7Render() {
