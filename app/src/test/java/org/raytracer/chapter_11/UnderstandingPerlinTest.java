@@ -4,27 +4,34 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.raytracer.Camera;
 import org.raytracer.Color;
 import org.raytracer.Material;
 import org.raytracer.PpmExporter;
+import org.raytracer.Transform;
 import org.raytracer.View;
 import org.raytracer.World;
 import org.raytracer.lights.PointLight;
 import org.raytracer.patterns.CheckerPattern;
+import org.raytracer.patterns.InterpolatedNoise;
 import org.raytracer.patterns.Perlin;
+import org.raytracer.patterns.StructuredNoise;
+import org.raytracer.patterns.WhiteNoise;
 import org.raytracer.shapes.Plane;
 import static org.raytracer.Point.point;
 import static org.raytracer.Color.color;
 import static org.raytracer.Vector.vector;
 
+//@Disabled
 public class UnderstandingPerlinTest {
 
     @Test
     public void test_perlin() {
-        var HIGH_RES = false;
+        var HIGH_RES = true;
         var NOISE_ON = true;
+        var FILE_A = true;
 
         var floorMaterial = new Material()
                 .setPattern(new CheckerPattern(Color.WHITE, Color.BLACK));
@@ -32,10 +39,15 @@ public class UnderstandingPerlinTest {
         var noisyFloorMaterial = new Material()
                 .setPattern(new Perlin(new CheckerPattern(Color.WHITE, Color.BLACK)));
 
+        var myNoise = new InterpolatedNoise(Color.WHITE, Color.BLACK);
+        myNoise.setTransform(Transform.scale(0.01f, 0.01f, 0.01f));
+        var myNoiseFloor = new Material().setPattern(myNoise);
+
         var floor = new Plane();
 
         if (NOISE_ON) {
-            floor.setMaterial(noisyFloorMaterial);
+            // floor.setMaterial(noisyFloorMaterial);
+            floor.setMaterial(myNoiseFloor);
         } else {
             floor.setMaterial(floorMaterial);
         }
@@ -59,7 +71,11 @@ public class UnderstandingPerlinTest {
         var renderEnd = Instant.now();
 
         var exportStart = Instant.now();
-        PpmExporter.export(img, "/tmp/perlin.ppm");
+        if (FILE_A) {
+            PpmExporter.export(img, "/tmp/noise_a.ppm");
+        } else {
+            PpmExporter.export(img, "/tmp/noise_b.ppm");
+        }
         var exportEnd = Instant.now();
 
         System.out.println("render: " + Duration.between(renderStart, renderEnd).toMillis());

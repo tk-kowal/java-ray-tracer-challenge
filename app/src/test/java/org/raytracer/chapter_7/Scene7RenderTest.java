@@ -1,5 +1,6 @@
 package org.raytracer.chapter_7;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.raytracer.Camera;
 import org.raytracer.Color;
@@ -9,11 +10,8 @@ import org.raytracer.Transform;
 import org.raytracer.View;
 import org.raytracer.World;
 import org.raytracer.lights.PointLight;
-import org.raytracer.patterns.BlendedPattern;
 import org.raytracer.patterns.Gradient;
-import org.raytracer.patterns.Patterns;
 import org.raytracer.patterns.Perlin;
-import org.raytracer.patterns.RingPattern;
 import org.raytracer.patterns.StripePattern;
 import org.raytracer.patterns.Targets;
 import org.raytracer.shapes.Plane;
@@ -27,7 +25,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
-//@Disabled
+@Disabled
 public class Scene7RenderTest {
 
         private static boolean HIGH_RES = false;
