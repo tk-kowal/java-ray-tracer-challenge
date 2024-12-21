@@ -25,10 +25,10 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
-@Disabled
+//@Disabled
 public class Scene7RenderTest {
 
-        private static boolean HIGH_RES = false;
+        private static boolean HIGH_RES = true;
 
         @Test
         public void testScene7Render() {
@@ -53,7 +53,7 @@ public class Scene7RenderTest {
                                                 Transform.rotateY((float) Math.PI / 4).rotateZ((float) Math.PI / 4)
                                                                 .scale(0.05f, 0.05f, .05f));
 
-                var perlinPattern = new Perlin(middlePattern);
+                var perlinPattern = new Perlin(middlePattern, 0.5f);
 
                 var middle = new Sphere();
                 middle.setTransform(Transform.translate(-0.5f, 1, 0.5f));

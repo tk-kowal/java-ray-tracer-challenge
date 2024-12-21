@@ -5,67 +5,70 @@ import static org.raytracer.Point.point;
 public class Perlin extends Pattern {
 
         private Pattern a;
+        private float scale;
 
-        public Perlin(Pattern a) {
+        public Perlin(Pattern a, float scale) {
                 this.a = a;
+                this.scale = scale;
         }
 
         @Override
         public float[] colorAt(float[] point) {
                 var lp = transform.inverse().multiply(point);
-                var noiseX = (float) noise(lp[0] + 10.0, lp[1], lp[2]);
-                var noiseY = (float) noise(lp[0], lp[1] + 15.0, lp[2]);
-                var noiseZ = (float) noise(lp[0], lp[1], lp[2] + 20.0);
-                var alpha = 0.01f;
-                var newX = lp[0] * noiseX * alpha;
-                var newY = lp[1] * noiseY * alpha;
-                var newZ = lp[2] * noiseZ * alpha;
-                var np = point(newX, newY, newZ);
-                return a.colorAt(np);
+                var nX = noise(lp[0] + 7, lp[1], lp[2]) * scale;
+                var nY = noise(lp[0], lp[1] + 17, lp[2]) * scale;
+                var nZ = noise(lp[0], lp[1], lp[2] + 31) * scale;
+
+                return a.colorAt(point(lp[0] + nX, lp[1] + nY, lp[2] + nZ));
         }
 
-        static public double noise(double x, double y, double z) {
+        static public float noise(float x, float y, float z) {
                 int X = (int) Math.floor(x) & 255;
                 int Y = (int) Math.floor(y) & 255;
                 int Z = (int) Math.floor(z) & 255;
-                x -= Math.floor(x);
-                y -= Math.floor(y);
-                z -= Math.floor(z);
-                double u = fade(x);
-                double v = fade(y);
-                double w = fade(z);
-                int A = p[X] + Y;
-                int AA = p[A] + Z;
-                int AB = p[A + 1] + Z;
-                int B = p[X + 1] + Y;
-                int BA = p[B] + Z;
-                int BB = p[B + 1] + Z;
 
-                return lerp(w, lerp(v, lerp(u, grad(p[AA], x, y, z), // AND ADD
-                                grad(p[BA], x - 1, y, z)), // BLENDED
-                                lerp(u, grad(p[AB], x, y - 1, z), // RESULTS
-                                                grad(p[BB], x - 1, y - 1, z))), // FROM 8
-                                lerp(v, lerp(u, grad(p[AA + 1], x, y, z - 1), // CORNERS
-                                                grad(p[BA + 1], x - 1, y, z - 1)), // OF CUBE
-                                                lerp(u, grad(p[AB + 1], x, y - 1, z - 1),
-                                                                grad(p[BB + 1], x - 1, y - 1, z - 1))));
+                var dx = x - (float) Math.floor(x);
+                var dy = y - (float) Math.floor(y);
+                var dz = z - (float) Math.floor(z);
+
+                float u = fade(dx);
+                float v = fade(dy);
+                float w = fade(dz);
+
+                float w000 = grad(X, Y, Z, dx, dy, dz);
+                float w100 = grad(X + 1, Y, Z, dx - 1, dy, dz);
+                float w010 = grad(X, Y + 1, Z, dx, dy - 1, dz);
+                float w001 = grad(X, Y, Z + 1, dx, dy, dz - 1);
+                float w110 = grad(X + 1, Y + 1, Z, dx - 1, dy - 1, dz);
+                float w101 = grad(X + 1, Y, Z + 1, dx - 1, dy, dz - 1);
+                float w011 = grad(X, Y + 1, Z + 1, dx, dy - 1, dz - 1);
+                float w111 = grad(X + 1, Y + 1, Z + 1, dx - 1, dy - 1, dz - 1);
+
+                float x00 = lerp(u, w000, w100);
+                float x10 = lerp(u, w010, w110);
+                float x01 = lerp(u, w001, w101);
+                float x11 = lerp(u, w011, w111);
+                float y0 = lerp(v, x00, x10);
+                float y1 = lerp(v, x01, x11);
+
+                return lerp(w, y0, y1);
         }
 
-        static double fade(double t) {
+        static float fade(float t) {
                 // 6t^5 - 15t^4 + 10t^3
-                // return t * t * t * (t * (t * 6 - 15) + 10);
-                return t;
+                return t * t * t * (t * (t * 6 - 15) + 10);
         }
 
-        static double lerp(double t, double a, double b) {
+        static float lerp(float t, float a, float b) {
                 return a + t * (b - a);
         }
 
-        static double grad(int hash, double x, double y, double z) {
-                int h = hash & 15; // CONVERT LO 4 BITS OF HASH CODE
-                double u = h < 8 ? x : y, // INTO 12 GRADIENT DIRECTIONS.
-                                v = h < 4 ? y : h == 12 || h == 14 ? x : z;
-                return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
+        static float grad(int ix, int iy, int iz, float dx, float dy, float dz) {
+                int h = p[p[p[ix] + iy] + iz];
+                h &= 15;
+                float u = h < 8 || h == 12 || h == 13 ? dx : dy;
+                float v = h < 4 || h == 12 || h == 13 ? dy : dz;
+                return ((h & 1) == 1 ? -u : u) + ((h & 2) == 1 ? -v : v);
         }
 
         static final int p[] = new int[512], permutation[] = { 151, 160, 137, 91, 90, 15,

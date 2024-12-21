@@ -4,18 +4,11 @@ import static org.raytracer.Color.color;
 
 public class InterpolatedNoise extends Pattern {
 
-    private float[] a, b;
-
-    public InterpolatedNoise(float[] colorA, float[] colorB) {
-        this.a = colorA;
-        this.b = colorB;
-    }
-
     @Override
     public float[] colorAt(float[] point) {
         var lp = transform.inverse().multiply(point);
-        var X = (int) lp[0] & 99;
-        var Z = (int) lp[2] & 99;
+        var X = (int) lp[0] & 255;
+        var Z = (int) lp[2] & 255;
         var x = (float) (lp[0] - Math.floor(lp[0]));
         var z = (float) (lp[2] - Math.floor(lp[2]));
 
@@ -24,27 +17,42 @@ public class InterpolatedNoise extends Pattern {
         var noiseZA = p[Z] + X;
         var noiseZB = p[Z + 1] + X;
 
-        var noise = lerp(lerp(lerp(noiseXA, noiseXB, x), noiseZA, z), noiseZB, z);
+        var u = smooth(x);
+        var w = smooth(z);
+
+        var noise = lerp(lerp(lerp(noiseXA, noiseXB, u), noiseZA, w), noiseZB, w);
 
         var value = noise / 100f;
 
         return color(value, value, value);
     }
 
+    private float smooth(float a) {
+        return a * a * (3 - 2 * a);
+    }
+
     private float lerp(float a, float b, float t) {
         return a + t * (b - a);
     }
 
-    static final int p[] = new int[200], permutations[] = {
-            93, 22, 4, 37, 2, 32, 80, 44, 13, 74, 86, 8, 79, 85, 50, 28, 53, 55, 21, 65, 56, 52, 39, 97, 61, 73, 34, 17,
-            33, 57, 89, 72, 7, 35, 76, 27, 63, 25, 66, 91, 19, 59, 64, 99, 47, 95, 94, 82, 38, 92, 67, 90, 1, 46, 45,
-            49, 42, 36, 96, 77, 48, 40, 71, 15, 10, 51, 18, 6, 24, 98, 41, 75, 54, 0, 84, 58, 5, 87, 11, 83, 60, 31, 78,
-            12, 30, 43, 14, 69, 62, 70, 3, 16, 20, 26, 81, 68, 9, 23, 29, 88
+    static final int p[] = new int[512], permutation[] = { 151, 160, 137, 91, 90, 15,
+            131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69, 142, 8, 99, 37, 240, 21, 10,
+            23,
+            190, 6, 148, 247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203, 117, 35, 11, 32, 57, 177, 33,
+            88, 237, 149, 56, 87, 174, 20, 125, 136, 171, 168, 68, 175, 74, 165, 71, 134, 139, 48, 27, 166,
+            77, 146, 158, 231, 83, 111, 229, 122, 60, 211, 133, 230, 220, 105, 92, 41, 55, 46, 245, 40, 244,
+            102, 143, 54, 65, 25, 63, 161, 1, 216, 80, 73, 209, 76, 132, 187, 208, 89, 18, 169, 200, 196,
+            135, 130, 116, 188, 159, 86, 164, 100, 109, 198, 173, 186, 3, 64, 52, 217, 226, 250, 124, 123,
+            5, 202, 38, 147, 118, 126, 255, 82, 85, 212, 207, 206, 59, 227, 47, 16, 58, 17, 182, 189, 28,
+            42,
+            223, 183, 170, 213, 119, 248, 152, 2, 44, 154, 163, 70, 221, 153, 101, 155, 167, 43, 172, 9,
+            129, 22, 39, 253, 19, 98, 108, 110, 79, 113, 224, 232, 178, 185, 112, 104, 218, 246, 97, 228,
+            251, 34, 242, 193, 238, 210, 144, 12, 191, 179, 162, 241, 81, 51, 145, 235, 249, 14, 239, 107,
+            49, 192, 214, 31, 181, 199, 106, 157, 184, 84, 204, 176, 115, 121, 50, 45, 127, 4, 150, 254,
+            138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180
     };
-
     static {
-        for (int i = 0; i < 100; i++) {
-            p[100 + i] = p[i] = permutations[i];
-        }
+        for (int i = 0; i < 256; i++)
+            p[256 + i] = p[i] = permutation[i];
     }
 }

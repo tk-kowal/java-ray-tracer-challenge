@@ -15,42 +15,30 @@ import org.raytracer.View;
 import org.raytracer.World;
 import org.raytracer.lights.PointLight;
 import org.raytracer.patterns.CheckerPattern;
-import org.raytracer.patterns.InterpolatedNoise;
 import org.raytracer.patterns.Perlin;
-import org.raytracer.patterns.StructuredNoise;
-import org.raytracer.patterns.WhiteNoise;
 import org.raytracer.shapes.Plane;
 import static org.raytracer.Point.point;
 import static org.raytracer.Color.color;
 import static org.raytracer.Vector.vector;
 
-//@Disabled
+@Disabled
 public class UnderstandingPerlinTest {
 
     @Test
     public void test_perlin() {
         var HIGH_RES = true;
-        var NOISE_ON = true;
         var FILE_A = true;
 
+        var stripes = new CheckerPattern(Color.BLACK, Color.RED);
+        stripes.setTransform(Transform.scale(0.5f, 0.5f, 0.5f));
+        var perlin = new Perlin(stripes, 0.02f);
+
         var floorMaterial = new Material()
-                .setPattern(new CheckerPattern(Color.WHITE, Color.BLACK));
-
-        var noisyFloorMaterial = new Material()
-                .setPattern(new Perlin(new CheckerPattern(Color.WHITE, Color.BLACK)));
-
-        var myNoise = new InterpolatedNoise(Color.WHITE, Color.BLACK);
-        myNoise.setTransform(Transform.scale(0.01f, 0.01f, 0.01f));
-        var myNoiseFloor = new Material().setPattern(myNoise);
+                .setPattern(perlin);
 
         var floor = new Plane();
 
-        if (NOISE_ON) {
-            // floor.setMaterial(noisyFloorMaterial);
-            floor.setMaterial(myNoiseFloor);
-        } else {
-            floor.setMaterial(floorMaterial);
-        }
+        floor.setMaterial(floorMaterial);
 
         var light = new PointLight(point(-10, 10, -10), color(1, 1, 1));
 
