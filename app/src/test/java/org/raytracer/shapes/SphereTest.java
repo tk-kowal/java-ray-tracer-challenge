@@ -87,10 +87,10 @@ public class SphereTest {
         var sphere = new Sphere();
         var defaultMaterial = new Material();
         var sphereMaterial = sphere.material();
-        assertTrue(Scalar.areEqual(sphereMaterial.ambient(), defaultMaterial.ambient()));
-        assertTrue(Scalar.areEqual(sphereMaterial.diffuse(), defaultMaterial.diffuse()));
-        assertTrue(Scalar.areEqual(sphereMaterial.specular(), defaultMaterial.specular()));
-        assertTrue(Scalar.areEqual(sphereMaterial.shininess(), defaultMaterial.shininess()));
+        assertTrue(Scalar.areEqual(sphereMaterial.ambient, defaultMaterial.ambient));
+        assertTrue(Scalar.areEqual(sphereMaterial.diffuse, defaultMaterial.diffuse));
+        assertTrue(Scalar.areEqual(sphereMaterial.specular, defaultMaterial.specular));
+        assertTrue(Scalar.areEqual(sphereMaterial.shininess, defaultMaterial.shininess));
         assertTrue(Tuple.areEqual(sphereMaterial.color(), defaultMaterial.color()));
     }
 

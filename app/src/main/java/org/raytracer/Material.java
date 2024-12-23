@@ -4,10 +4,10 @@ import org.raytracer.patterns.Pattern;
 
 public class Material {
 
-    private float ambient, diffuse, specular, shininess, reflective;
-    private float[] color;
+    public float ambient, diffuse, specular, shininess, reflective, transparency, refractix;
+    public float[] color;
 
-    private Pattern pattern;
+    public Pattern pattern;
 
     public Material() {
         this.color = Color.color(1f, 1f, 1f);
@@ -16,11 +16,9 @@ public class Material {
         this.specular = 0.9f;
         this.shininess = 200.0f;
         this.reflective = 0f;
+        this.transparency = 0f;
+        this.refractix = 1f;
         this.pattern = null;
-    }
-
-    public float ambient() {
-        return this.ambient;
     }
 
     public float[] color() {
@@ -33,26 +31,6 @@ public class Material {
         } else {
             return pattern.colorAt(point);
         }
-    }
-
-    public float diffuse() {
-        return this.diffuse;
-    }
-
-    public Pattern pattern() {
-        return pattern;
-    }
-
-    public float reflective() {
-        return this.reflective;
-    }
-
-    public float specular() {
-        return this.specular;
-    }
-
-    public float shininess() {
-        return this.shininess;
     }
 
     public Material setColor(float[] color) {
@@ -90,6 +68,16 @@ public class Material {
         return this;
     }
 
+    public Material setTransparency(float t) {
+        this.transparency = t;
+        return this;
+    }
+
+    public Material setRefractIx(float ri) {
+        this.refractix = ri;
+        return this;
+    }
+
     public boolean equals(Object other) {
         if (other instanceof Material) {
             var otherMaterial = (Material) other;
@@ -99,7 +87,9 @@ public class Material {
                     && Scalar.areEqual(ambient, otherMaterial.ambient)
                     && Scalar.areEqual(shininess, otherMaterial.shininess)
                     && Scalar.areEqual(reflective, otherMaterial.reflective)
-                    && pattern == otherMaterial.pattern();
+                    && Scalar.areEqual(transparency, otherMaterial.transparency)
+                    && Scalar.areEqual(refractix, otherMaterial.refractix)
+                    && pattern == otherMaterial.pattern;
         } else {
             return false;
         }

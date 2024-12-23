@@ -31,19 +31,31 @@ public abstract class Shape {
     }
 
     public float shininess() {
-        return material.shininess();
+        return material.shininess;
     }
 
     public float diffuse() {
-        return material.diffuse();
+        return material.diffuse;
     }
 
     public float ambient() {
-        return material.ambient();
+        return material.ambient;
     }
 
     public float specular() {
-        return material.specular();
+        return material.specular;
+    }
+
+    public float transparency() {
+        return material.transparency;
+    }
+
+    public float refractix() {
+        return material.refractix;
+    }
+
+    public float reflective() {
+        return material.reflective;
     }
 
     public void setMaterial(Material m) {

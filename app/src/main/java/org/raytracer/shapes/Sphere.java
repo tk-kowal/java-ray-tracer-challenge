@@ -2,6 +2,7 @@ package org.raytracer.shapes;
 
 import java.util.List;
 
+import org.raytracer.Material;
 import org.raytracer.Ray;
 import org.raytracer.Tuple;
 
@@ -12,6 +13,12 @@ public class Sphere extends Shape {
 
     public Sphere() {
         super();
+    }
+
+    public static Sphere glassSphere() {
+        var s = new Sphere();
+        s.setMaterial(new Material().setRefractIx(1.5f).setTransparency(1));
+        return s;
     }
 
     public boolean equals(Object other) {

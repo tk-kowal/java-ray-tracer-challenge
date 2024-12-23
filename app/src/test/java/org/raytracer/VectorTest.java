@@ -10,8 +10,8 @@ public class VectorTest {
 
     @Test
     void test_vectorWhenLastElementIsZero() {
-        float[] point = { 0, 0, 0, 0 };
-        assertTrue(Vector.isVector(point));
+        float[] tuple = { 0, 0, 0, 0 };
+        assertTrue(Vector.isVector(tuple));
     }
 
     @Test

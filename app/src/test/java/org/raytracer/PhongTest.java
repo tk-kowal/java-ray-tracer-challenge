@@ -3,6 +3,7 @@ package org.raytracer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.raytracer.lights.PointLight;
+import org.raytracer.patterns.TestPattern;
 import org.raytracer.shapes.Plane;
 import org.raytracer.shapes.Shape;
 import org.raytracer.shapes.Sphere;
@@ -90,11 +91,11 @@ public class PhongTest {
         var s = new Sphere();
         var i = new Ray.Intersection(4, s);
         var result = Phong.prepare(i, r);
-        assertEquals(i.t(), result.t());
-        assertEquals(s, (Sphere) result.s());
-        assertTrue(Tuple.areEqual(point(0, 0, -1), result.point()));
-        assertTrue(Tuple.areEqual(vector(0, 0, -1), result.eyev()));
-        assertTrue(Tuple.areEqual(vector(0, 0, -1), result.normalv()));
+        assertEquals(i.t(), result.t);
+        assertEquals(s, (Sphere) result.s);
+        assertTrue(Tuple.areEqual(point(0, 0, -1), result.point));
+        assertTrue(Tuple.areEqual(vector(0, 0, -1), result.eyev));
+        assertTrue(Tuple.areEqual(vector(0, 0, -1), result.normalv));
     }
 
     @Test
@@ -103,8 +104,8 @@ public class PhongTest {
         var s = new Sphere();
         var i = new Ray.Intersection(1, s);
         var result = Phong.prepare(i, r);
-        assertTrue(result.isInside());
-        assertTrue(Tuple.areEqual(vector(0, 0, -1), result.normalv()));
+        assertTrue(result.isInside);
+        assertTrue(Tuple.areEqual(vector(0, 0, -1), result.normalv));
     }
 
     // World
@@ -221,7 +222,7 @@ public class PhongTest {
         var ray = ray(point(0, 1, -1), vector(0, (float) (-1 * Math.sqrt(2) / 2), (float) Math.sqrt(2) / 2));
         var i = new Ray.Intersection((float) Math.sqrt(2), plane);
         var expected = vector(0, (float) Math.sqrt(2) / 2, (float) Math.sqrt(2) / 2);
-        var actual = Phong.prepare(i, ray).reflectv();
+        var actual = Phong.prepare(i, ray).reflectv;
         assertTrue(Tuple.areEqual(expected, actual));
     }
 
@@ -263,4 +264,91 @@ public class PhongTest {
         assertTrue(Tuple.areEqual(color(0.87677f, 0.92436f, 0.82918f), result));
     }
 
+    @Test
+    public void test_refractix() {
+        var a = Sphere.glassSphere();
+        a.setTransform(Transform.scale(2, 2, 2));
+
+        var b = Sphere.glassSphere();
+        b.setTransform(Transform.translate(0, 0, -.25f));
+        b.material().setRefractIx(2f);
+
+        var c = Sphere.glassSphere();
+        c.setTransform(Transform.translate(0, 0, .25f));
+        c.material().setRefractIx(2.5f);
+
+        var w = new World();
+        w.objects().addAll(List.of(a, b, c));
+
+        var r = ray(point(0, 0, -4), vector(0, 0, 1));
+
+        var xs = Ray.intersect(w, r);
+        var expectedN1s = List.of(1.0f, 1.5f, 2.0f, 2.5f, 2.5f, 1.5f);
+        var expectedN2s = List.of(1.5f, 2.0f, 2.5f, 2.5f, 1.5f, 1.0f);
+
+        for (var i = 0; i < 6; i++) {
+            var params = Phong.prepare(xs.get(i), r, xs);
+            assertTrue(Scalar.areEqual(expectedN1s.get(i), params.n1));
+            assertTrue(Scalar.areEqual(expectedN2s.get(i), params.n2));
+        }
+    }
+
+    @Test
+    public void test_refractedColorAtOpaque() {
+        var w = new World();
+        w.objects().add(new Sphere());
+
+        var r = ray(point(0, 0, -5), vector(0, 0, 1));
+        var xs = Ray.intersect(w, r);
+        var params = Phong.prepare(Ray.hit(xs), r, xs);
+
+        var result = Phong.refractedColorAt(w, params, 5);
+
+        assertTrue(Tuple.areEqual(Color.BLACK, result));
+    }
+
+    @Test
+    public void test_refractedColorAtMaxRecursion() {
+        var w = new World();
+        w.objects().add(Sphere.glassSphere());
+
+        var r = ray(point(0, 0, -5), vector(0, 0, 1));
+        var xs = Ray.intersect(w, r);
+        var params = Phong.prepare(Ray.hit(xs), r, xs);
+
+        var result = Phong.refractedColorAt(w, params, 0);
+
+        assertTrue(Tuple.areEqual(Color.BLACK, result));
+    }
+
+    @Test
+    public void test_refractedTotalInternalReflection() {
+        var w = new World();
+        var s = Sphere.glassSphere();
+        w.objects().add(s);
+
+        var r = ray(point(0.8f, 0.3f, 0), vector(0.1f, -1, 0));
+
+        var xs = Ray.intersect(w, r);
+        var params = Phong.prepare(Ray.hit(xs), r, xs);
+        var result = Phong.refractedColorAt(w, params, 5);
+
+        assertTrue(Tuple.areEqual(Color.BLACK, result));
+    }
+
+    @Test
+    public void test_refractedColor() {
+        var w = World.defaultWorld();
+        var a = w.objects().getFirst();
+        a.setMaterial(new Material().setAmbient(1).setPattern(new TestPattern()));
+
+        var b = w.objects().get(1);
+        b.setMaterial(new Material().setTransparency(1).setRefractIx(1.5f));
+
+        var r = ray(point(0, 0, 0.1f), vector(0, 1, 0));
+        var xs = Ray.intersect(w, r);
+        var params = Phong.prepare(Ray.hit(xs), r, xs);
+        var result = Phong.refractedColorAt(w, params, 5);
+        assertTrue(Tuple.areEqual(color(0, 0.99888f, 0.04725f), result));
+    }
 }
