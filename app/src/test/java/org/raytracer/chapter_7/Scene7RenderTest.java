@@ -12,6 +12,7 @@ import org.raytracer.World;
 import org.raytracer.lights.PointLight;
 import org.raytracer.patterns.Gradient;
 import org.raytracer.patterns.Perlin;
+import org.raytracer.patterns.SolidPattern;
 import org.raytracer.patterns.StripePattern;
 import org.raytracer.patterns.Targets;
 import org.raytracer.shapes.Plane;
@@ -33,40 +34,45 @@ public class Scene7RenderTest {
         @Test
         public void testScene7Render() {
 
-                var targets = new Targets(Color.GREY, Color.WHITE, Color.BLACK);
+                var targets = new Targets(Color.RED, Color.WHITE, Color.WHITE);
                 targets.setTransform(Transform.scale(.5f, .5f, .5f));
 
                 var floor = new Plane();
                 floor.setMaterial(
                                 new Material().setColor(color(1, .9f, .9f)).setPattern(targets));
 
-                var wallPattern = new Gradient(Color.WHITE, Color.BLACK);
+                var wallPattern = new SolidPattern(Color.BLACK);
                 wallPattern.setTransform(Transform.rotateY((float) (-1 * Math.PI / 2)).scale(100, 1, 1));
 
                 var wall = new Plane();
                 wall.setMaterial(new Material().setSpecular(0).setPattern(wallPattern));
                 wall.setTransform(Transform.rotateX((float) (-1f * Math.PI / 2)).translate(0, -100, 0));
 
-                var middlePattern = new StripePattern(Color.WHITE, Color.RED);
+                var middlePattern = new StripePattern(Color.WHITE, Color.BLACK);
                 middlePattern
                                 .setTransform(
-                                                Transform.rotateY((float) Math.PI / 4).rotateZ((float) Math.PI / 4)
+                                                Transform.rotateY((float) Math.PI / 2).rotateZ((float) Math.PI / 4)
                                                                 .scale(0.05f, 0.05f, .05f));
 
                 var perlinPattern = new Perlin(middlePattern, 0.5f);
 
                 var middle = new Sphere();
                 middle.setTransform(Transform.translate(-0.5f, 1, 0.5f));
-                middle.setMaterial(new Material().setColor(color(0.1f, 1, 0.5f)).setDiffuse(.7f).setSpecular(.3f)
-                                .setPattern(perlinPattern));
+                middle.setMaterial(new Material().setColor(color(0f, 0.75f, 0.75f)).setDiffuse(.7f).setSpecular(.3f)
+                                .setReflective(.15f));
 
                 var right = new Sphere();
                 right.setTransform(Transform.translate(1.5f, 0.5f, -0.5f).scale(0.5f, 0.5f, 0.5f));
-                right.setMaterial(new Material().setColor(Color.WHITE).setDiffuse(.7f).setSpecular(.3f));
+                right.setMaterial(new Material().setColor(Color.WHITE).setDiffuse(.7f).setSpecular(.3f)
+                                .setPattern(perlinPattern));
 
                 var left = new Sphere();
                 left.setTransform(Transform.translate(-1.5f, 0.33f, -0.75f).scale(0.33f, 0.33f, 0.33f));
                 left.setMaterial(new Material().setColor(Color.WHITE).setDiffuse(.7f).setSpecular(.3f));
+
+                var giant = new Sphere();
+                giant.setTransform(Transform.translate(3.5f, 3f, 5).scale(3f, 3f, 3f));
+                giant.setMaterial(new Material().setColor(Color.WHITE).setSpecular(0.9f).setReflective(1f));
 
                 var light = new PointLight(point(-10, 10, -10), color(1, 1, 1));
 
@@ -78,9 +84,9 @@ public class Scene7RenderTest {
                         camera = new Camera(200, 100, (float) (Math.PI / 3));
                 }
 
-                camera.setTransform(View.transform(point(0, 1.5f, -10), point(0, 1, 0), vector(0, 1, 0)));
+                camera.setTransform(View.transform(point(2, 4f, -10), point(0, 1, 0), vector(0, 1, 0)));
 
-                var world = new World(List.of(floor, wall, left, middle, right), List.of(light));
+                var world = new World(List.of(floor, wall, giant, left, middle, right), List.of(light));
 
                 var renderStart = Instant.now();
                 var img = camera.render(world);

@@ -5,12 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.raytracer.Point.point;
 import static org.raytracer.Vector.vector;
+import static org.raytracer.Phong.prepare;
 
 import java.util.Arrays;
 
 import static org.raytracer.Ray.ray;
 
 import org.junit.jupiter.api.Test;
+import org.raytracer.shapes.Plane;
 import org.raytracer.shapes.Sphere;
 
 public class RayTest {

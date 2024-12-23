@@ -10,16 +10,32 @@ import static org.raytracer.Ray.ray;
 public class Phong {
 
     public record PhongParams(float t, Shape s, float[] point, float[] overpoint, float[] eyev, float[] normalv,
+            float[] reflectv,
             boolean isInside) {
     }
 
     public static float[] colorAt(World w, Ray r) {
+        return colorAt(w, r, 5);
+    }
+
+    public static float[] colorAt(World w, Ray r, int ttl) {
         var xs = Ray.intersect(w, r);
         if (xs.isEmpty() || Ray.hit(xs) == null) {
             return color(0, 0, 0);
         }
         var params = prepare(Ray.hit(xs), r);
-        return shadeHit(w, params);
+        return shadeHit(w, params, ttl);
+    }
+
+    public static float[] reflectedColorAt(World w, PhongParams p, int ttl) {
+        if (ttl == 0 || p.s.material().reflective() == 0) {
+            return Color.BLACK;
+        }
+
+        var reflectedRay = ray(p.overpoint(), p.reflectv());
+        var reflectedColor = colorAt(w, reflectedRay, ttl - 1);
+
+        return Tuple.multiply(reflectedColor, p.s.material().reflective());
     }
 
     public static boolean isShadowed(World w, float[] p) {
@@ -46,8 +62,8 @@ public class Phong {
 
         if (!isInShadow && lightDotNormal >= 0) {
             diffuse = Tuple.multiply(Tuple.multiply(effectiveColor, s.diffuse()), lightDotNormal);
-            var reflectv = reflect(multiply(lightv, -1f), normalv);
-            var reflectDotEye = dot(reflectv, eyev);
+            var lightReflectV = reflect(multiply(lightv, -1f), normalv);
+            var reflectDotEye = dot(lightReflectV, eyev);
 
             if (reflectDotEye > 0) {
                 var factor = (float) Math.pow(reflectDotEye, s.shininess());
@@ -58,21 +74,24 @@ public class Phong {
         return add(add(ambient, diffuse), specular);
     }
 
-    public static float[] shadeHit(World w, PhongParams p) {
+    public static float[] shadeHit(World w, PhongParams p, int ttl) {
         var shadowed = isShadowed(w, p.overpoint());
-        return lighting(
+        var surface = lighting(
                 p.s(),
                 w.lights().getFirst(),
                 p.overpoint(),
                 p.eyev(),
                 p.normalv(),
                 shadowed);
+        var reflected = reflectedColorAt(w, p, ttl);
+        return Tuple.add(surface, reflected);
     }
 
     public static PhongParams prepare(Ray.Intersection i, Ray r) {
         var object = i.object();
         var point = r.position(i.t());
         var normalv = object.normalAt(point);
+        var reflectv = reflect(r.direction(), normalv);
         var eyev = multiply(r.direction(), -1);
         var isInside = false;
         if (Vector.dot(normalv, eyev) < 0) {
@@ -80,7 +99,7 @@ public class Phong {
             normalv = multiply(normalv, -1);
         }
         var overpoint = Tuple.add(point, Tuple.multiply(normalv, Constants.EPSILON));
-        return new PhongParams(i.t(), i.object(), point, overpoint, eyev, normalv, isInside);
+        return new PhongParams(i.t(), i.object(), point, overpoint, eyev, normalv, reflectv, isInside);
     }
 
 }

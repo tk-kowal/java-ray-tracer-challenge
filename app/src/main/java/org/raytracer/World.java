@@ -1,6 +1,7 @@
 package org.raytracer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.raytracer.lights.Light;
@@ -35,7 +36,8 @@ public class World {
                 .setSpecular(0.2f));
         var s2 = new Sphere();
         s2.setTransform(Transform.scale(.5f, .5f, .5f));
-        return new World(List.of(s1, s2), List.of(light));
+        return new World(new ArrayList<Shape>(Arrays.asList(s1, s2)), new ArrayList<Light>(Arrays.asList(light)));
+
     }
 
     public List<Shape> objects() {

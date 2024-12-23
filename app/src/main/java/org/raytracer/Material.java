@@ -4,7 +4,7 @@ import org.raytracer.patterns.Pattern;
 
 public class Material {
 
-    private float ambient, diffuse, specular, shininess;
+    private float ambient, diffuse, specular, shininess, reflective;
     private float[] color;
 
     private Pattern pattern;
@@ -15,23 +15,12 @@ public class Material {
         this.diffuse = 0.9f;
         this.specular = 0.9f;
         this.shininess = 200.0f;
+        this.reflective = 0f;
         this.pattern = null;
     }
 
     public float ambient() {
         return this.ambient;
-    }
-
-    public float diffuse() {
-        return this.diffuse;
-    }
-
-    public float specular() {
-        return this.specular;
-    }
-
-    public float shininess() {
-        return this.shininess;
     }
 
     public float[] color() {
@@ -46,8 +35,24 @@ public class Material {
         }
     }
 
+    public float diffuse() {
+        return this.diffuse;
+    }
+
     public Pattern pattern() {
         return pattern;
+    }
+
+    public float reflective() {
+        return this.reflective;
+    }
+
+    public float specular() {
+        return this.specular;
+    }
+
+    public float shininess() {
+        return this.shininess;
     }
 
     public Material setColor(float[] color) {
@@ -80,6 +85,11 @@ public class Material {
         return this;
     }
 
+    public Material setReflective(float r) {
+        this.reflective = r;
+        return this;
+    }
+
     public boolean equals(Object other) {
         if (other instanceof Material) {
             var otherMaterial = (Material) other;
@@ -88,6 +98,7 @@ public class Material {
                     && Scalar.areEqual(diffuse, otherMaterial.diffuse)
                     && Scalar.areEqual(ambient, otherMaterial.ambient)
                     && Scalar.areEqual(shininess, otherMaterial.shininess)
+                    && Scalar.areEqual(reflective, otherMaterial.reflective)
                     && pattern == otherMaterial.pattern();
         } else {
             return false;
